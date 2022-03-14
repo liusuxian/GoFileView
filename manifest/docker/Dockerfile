@@ -20,7 +20,7 @@ RUN  yum install deltarpm -y &&\
      export DISPLAY=:0.0
 
 # 添加应用可执行文件，并设置执行权限
-ADD main $WORKDIR/main
+ADD ./temp/linux_amd64/main $WORKDIR/main
 RUN chmod +x $WORKDIR/main
 
 # 添加I18N多语言文件、静态文件、配置文件、模板文件
@@ -51,5 +51,5 @@ WORKDIR $WORKDIR
 CMD ./main
 
 # ------------------------------------本地打包镜像---------------------
-# docker build -t gofileview:v1.0 .
+# gf docker main.go -t gofileview:v1.0
 # docker run -d -p 8089:80 <imageID>
