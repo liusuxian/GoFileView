@@ -27,7 +27,7 @@ ADD ./temp/linux_amd64/main $WORKDIR/main
 RUN chmod +x $WORKDIR/main
 
 # 添加I18N多语言文件、静态文件、配置文件、模板文件
-ADD resource $WORKDIR/resource
+ADD resource $WORKDIR/
 ADD manifest/config $WORKDIR/config
 
 # 创建 cache 目录以及子目录
