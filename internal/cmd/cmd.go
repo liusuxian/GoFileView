@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"context"
+	"github.com/gogf/gf/v2/os/gres"
 
 	"GoFileView/internal/controller"
 	"github.com/gogf/gf/v2/frame/g"
@@ -22,6 +23,7 @@ var (
 					controller.Hello,
 				)
 			})
+			gres.Dump() // 打印出当前资源管理器中所有的文件列表
 			s.Run()
 			return nil
 		},
