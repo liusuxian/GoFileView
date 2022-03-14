@@ -1,10 +1,9 @@
 package controller
 
 import (
-	"context"
-
 	"GoFileView/api/v1"
-	"github.com/gogf/gf/v2/frame/g"
+	"GoFileView/utility/response"
+	"context"
 )
 
 var (
@@ -14,6 +13,6 @@ var (
 type cHello struct{}
 
 func (c *cHello) Hello(ctx context.Context, req *v1.HelloReq) (res *v1.HelloRes, err error) {
-	g.RequestFromCtx(ctx).Response.Writeln("Hello World!")
+	response.JsonOK(ctx, "Hello World!")
 	return
 }
