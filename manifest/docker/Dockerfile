@@ -11,13 +11,20 @@ ENV LANG en_US.UTF-8
 ENV LC_ALL en_US.UTF-8
 ENV TZ=Asia/Shanghai
 
-RUN  yum install java -y
-RUN  yum install deltarpm -y &&\
-     yum install libreoffice -y &&\
-     yum install libreoffice-headless -y &&\
-     yum install libreoffice-writer -y &&\
-     yum install ImageMagick -y &&\
+RUN  apk add --no-cache wget
+RUN  apk add --no-cache java
+RUN  apk add --no-cache deltarpm &&\
+     apk add --no-cache libreoffice &&\
+     apk add --no-cache libreoffice-headless &&\
+     apk add --no-cache libreoffice-writer &&\
+     apk add --no-cache ImageMagick &&\
      export DISPLAY=:0.0
+
+# 安装wkhtmltopdf用于将eml（html）文件转pdf
+RUN rpm --rebuilddb &&\
+    apk add --no-cache openssl &&\
+    apk add --no-cache xorg-x11-fonts-75dpi &&\
+    apk add --no-cache wkhtmltopdf
 
 # 添加应用可执行文件，并设置执行权限
 ADD ./temp/linux_amd64/main $WORKDIR/main
@@ -37,12 +44,6 @@ COPY utility/emailconverter-2.5.3-all.jar /usr/local/emailconverter-2.5.3-all.ja
 
 # pdf 添加水印
 COPY utility/pdfcpu /usr/local/pdfcpu
-
-# 安装wkhtmltopdf 用于将eml（html）文件转pdf
-RUN yum -y install wget &&\
-    wget http://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox-0.12.5-1.centos7.x86_64.rpm &&\
-    rpm --rebuilddb && yum install -y openssl && yum install -y xorg-x11-fonts-75dpi &&\
-    rpm -ivh wkhtmltox-0.12.5-1.centos7.x86_64.rpm
 
 ###############################################################################
 #                                   START
