@@ -6,13 +6,14 @@ COPY fonts/* /usr/share/fonts/ChineseFonts/
 #                                INSTALLATION
 ###############################################################################
 # 设置固定的项目路径
-ENV WORKDIR /var/www/GoFileView
+ENV WORKDIR /app
 ENV LANG en_US.UTF-8
 ENV LC_ALL en_US.UTF-8
 ENV TZ=Asia/Shanghai
 
 RUN  apk add --no-cache wget
-RUN  apk add --no-cache java
+RUN  apk add --no-cache glibc &&\
+     apk add --no-cache java
 RUN  apk add --no-cache deltarpm &&\
      apk add --no-cache libreoffice &&\
      apk add --no-cache libreoffice-headless &&\
