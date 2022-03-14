@@ -37,7 +37,7 @@ server:
   errorStack: true                              # 当Server捕获到异常时是否记录堆栈信息到日志中。默认为true
   errorLogEnabled: true                         # 是否记录异常日志信息到日志中。默认为true
   errorLogPattern: "error-{Y-m-d}.log"          # 异常错误日志文件格式。默认为"error-{Ymd}.log"
-  accessLogEnabled: true                        # 是否记录访问日志。默认为false
+  accessLogEnabled: false                       # 是否记录访问日志。默认为false
   accessLogPattern: "access-{Y-m-d}.log"        # 访问日志文件格式。默认为"access-{Ymd}.log"
 
   # PProf配置
