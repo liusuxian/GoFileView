@@ -30,6 +30,8 @@ var (
 					controller.Hello,
 					controller.ViewView,
 					controller.ViewImg,
+					controller.ViewPdf,
+					controller.ViewOffice,
 				)
 			})
 			// 每天凌晨两点清理服务器文件
