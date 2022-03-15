@@ -38,7 +38,7 @@ func OfficePage(imgPath string) []byte {
 		htmlCode = htmlCode +
 			`<img class="my-photo" alt="loading" title="查看大图" style="cursor: pointer;"
 		 data-src="/view/office?url=` + path.Base(imgPath) + "/" + gconv.String(i) + ".jpg" +
-			`" src="resource/public/resource/image/loading.gif" ">`
+			`" src="images/loading.gif" ">`
 
 	}
 	dataStr = strings.Replace(dataStr, "{{AllImages}}", htmlCode, -1)

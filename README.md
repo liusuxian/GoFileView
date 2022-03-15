@@ -91,5 +91,5 @@ go clean -modcache
 rm go.sum
 go mod tidy
 gf编译：gf build -o main
-gf资源打包：gf pack resource/public,resource/template,manifest/config internal/packed/data.go -n=packed
+gf资源打包：gf pack resource,manifest/config internal/packed/data.go -n=packed
 ```
