@@ -14,8 +14,8 @@ ENV LC_ALL en_US.UTF-8
 ENV TZ=Asia/Shanghai
 
 # Install cURL
-RUN echo -e "https://mirrors.ustc.edu.cn/alpine/latest-stable/main\n https://mirrors.ustc.edu.cn/alpine/latest-stable/community\n" > /etc/apk/repositories
-RUN apk --update add --no-cache openjdk8
+RUN echo "https://mirrors.ustc.edu.cn/alpine/latest-stable/main\n https://mirrors.ustc.edu.cn/alpine/latest-stable/community\n" > /etc/apk/repositories
+RUN apk --update add --no-cache wget openjdk8
 # Set environment
 ENV JAVA_HOME /usr/lib/jvm/default-jvm
 ENV PATH ${PATH}:${JAVA_HOME}/bin
