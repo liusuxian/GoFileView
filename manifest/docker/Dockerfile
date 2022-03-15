@@ -1,7 +1,7 @@
-FROM alpine:latest
+FROM centos:latest
 # LABLE 给镜像添加元数据
 # MAINTAINER 维护者信息
-LABEL maintainer="382185882@qq.com"
+LABEL MAINTAINER="liusuxian 382185882@qq.com"
 COPY fonts/* /usr/share/fonts/ChineseFonts/
 
 ###############################################################################
@@ -13,23 +13,14 @@ ENV LANG en_US.UTF-8
 ENV LC_ALL en_US.UTF-8
 ENV TZ=Asia/Shanghai
 
-# Install cURL
-RUN echo "https://mirrors.ustc.edu.cn/alpine/latest-stable/main\n https://mirrors.ustc.edu.cn/alpine/latest-stable/community\n" > /etc/apk/repositories
-RUN apk --update add --no-cache wget openjdk8
-# Set environment
-ENV JAVA_HOME /usr/lib/jvm/default-jvm
-ENV PATH ${PATH}:${JAVA_HOME}/bin
-
-RUN apk add --no-cache wget vim libreoffice libreoffice-writer ImageMagick && export DISPLAY=:0.0
-
-#RUN yum install java -y
-#
-#RUN yum install deltarpm -y &&\
-#    yum install libreoffice -y &&\
-#    yum install libreoffice-headless -y &&\
-#    yum install libreoffice-writer -y &&\
-#    yum install ImageMagick -y &&\
-#    export DISPLAY=:0.0
+RUN yum install vim -y
+RUN yum install java -y
+RUN yum install deltarpm -y &&\
+    yum install libreoffice -y &&\
+    yum install libreoffice-headless -y &&\
+    yum install libreoffice-writer -y &&\
+    yum install ImageMagick -y &&\
+    export DISPLAY=:0.0
 
 # 添加应用可执行文件，并设置执行权限
 ADD ./temp/linux_amd64/main $WORKDIR/main
@@ -53,10 +44,10 @@ COPY utility/emailconverter-2.5.3-all.jar /usr/local/emailconverter-2.5.3-all.ja
 COPY utility/pdfcpu /usr/local/pdfcpu
 
 # 安装wkhtmltopdf 用于将eml（html）文件转pdf
-#RUN yum -y install wget &&\
-#    wget http://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox-0.12.5-1.centos7.x86_64.rpm &&\
-#    rpm --rebuilddb && yum install -y openssl && yum install -y xorg-x11-fonts-75dpi &&\
-#    rpm -ivh wkhtmltox-0.12.5-1.centos7.x86_64.rpm
+RUN yum -y install wget &&\
+    wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox-0.12.5-1.centos8.x86_64.rpm &&\
+    rpm --rebuilddb && yum install -y openssl && yum install -y xorg-x11-fonts-75dpi &&\
+    rpm -ivh wkhtmltox-0.12.5-1.centos8.x86_64.rpm
 
 ###############################################################################
 #                                   START
