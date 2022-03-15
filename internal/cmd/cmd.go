@@ -28,7 +28,8 @@ var (
 				)
 				group.Bind(
 					controller.Hello,
-					controller.View,
+					controller.ViewView,
+					controller.ViewImg,
 				)
 			})
 			// 每天凌晨两点清理服务器文件

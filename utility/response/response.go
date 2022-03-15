@@ -5,6 +5,7 @@ import (
 	"context"
 	"github.com/gogf/gf/v2/errors/gcode"
 	"github.com/gogf/gf/v2/frame/g"
+	"strconv"
 )
 
 // JsonResponse 数据返回通用JSON数据结构
@@ -39,6 +40,26 @@ func Json(ctx context.Context, code int, message string, data interface{}) {
 		Data:    data,
 	})
 	if err != nil {
-		logger.Error(ctx, "Response Error:", err.Error())
+		logger.Error(ctx, "JsonResponse Error:", err.Error())
+	}
+}
+
+// HtmlPageOK 返回 html 页面
+func HtmlPageOK(ctx context.Context, data []byte) {
+	g.RequestFromCtx(ctx).Response.Writer.Header().Set("content-length", strconv.Itoa(len(data)))
+	g.RequestFromCtx(ctx).Response.Writer.Header().Set("content-type:", "text/html;charset=UTF-8")
+	_, err := g.RequestFromCtx(ctx).Response.Writer.Write(data)
+	if err != nil {
+		logger.Error(ctx, "HtmlPageOK Error:", err.Error())
+	}
+}
+
+// HtmlPage 返回 html 页面
+func HtmlPage(ctx context.Context, codeStr string, data []byte) {
+	g.RequestFromCtx(ctx).Response.Writer.Header().Set("content-length", strconv.Itoa(len(codeStr)))
+	g.RequestFromCtx(ctx).Response.Writer.Header().Set("content-type:", "text/html;charset=UTF-8")
+	_, err := g.RequestFromCtx(ctx).Response.Writer.Write(data)
+	if err != nil {
+		logger.Error(ctx, "HtmlPage Error:", err.Error())
 	}
 }

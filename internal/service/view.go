@@ -47,7 +47,7 @@ func OfficePage(imgPath string) []byte {
 }
 
 func ImagePage(filePath string) []byte {
-	dataByte, _ := ioutil.ReadFile("public/html/image.html")
+	dataByte, _ := ioutil.ReadFile("resource/public/html/image.html")
 	dataStr := string(dataByte)
 	imageUrl := "/view/img?url=" + path.Base(filePath)
 	htmlCode := `<li>
@@ -61,7 +61,7 @@ func ImagePage(filePath string) []byte {
 }
 
 func PdfPage(filePath string) []byte {
-	dataByte, _ := ioutil.ReadFile("public/html/pdf.html")
+	dataByte, _ := ioutil.ReadFile("resource/public/html/pdf.html")
 	dataStr := string(dataByte)
 
 	pdfUrl := "/view/pdf?url=" + path.Base(filePath)
@@ -72,7 +72,7 @@ func PdfPage(filePath string) []byte {
 }
 
 func PdfPageDownload(filePath string) []byte {
-	dataByte, _ := ioutil.ReadFile("public/html/pdf.html")
+	dataByte, _ := ioutil.ReadFile("resource/public/html/pdf.html")
 	dataStr := string(dataByte)
 	pdfUrl := "/view/img?url=" + path.Base(filePath)
 	dataStr = strings.Replace(dataStr, "{{url}}", pdfUrl, -1)
@@ -85,7 +85,7 @@ func MdPage(filepath string) []byte {
 	unsafe := blackfriday.MarkdownCommon(Byte)
 	html := bluemonday.UGCPolicy().SanitizeBytes(unsafe)
 
-	dataByte, _ := ioutil.ReadFile("public/html/md.html")
+	dataByte, _ := ioutil.ReadFile("resource/public/html/md.html")
 	dataStr := string(dataByte)
 
 	dataStr = strings.Replace(dataStr, "{{url}}", string(html), -1)
@@ -226,7 +226,7 @@ func ExcelPage(filePath string) []byte {
 		</script><script src="/html/js/excel.header.js" type="text/javascript">
 		</script><link rel="stylesheet" href="/html/css/bootstrap.min.css">
 		`
-	dataByte, _ := ioutil.ReadFile("public/html/excel.html")
+	dataByte, _ := ioutil.ReadFile("resource/public/html/excel.html")
 	dataStr := string(dataByte)
 
 	dataStr = strings.Replace(dataStr, "{{url}}", html, -1)

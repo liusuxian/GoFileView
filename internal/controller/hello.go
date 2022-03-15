@@ -14,7 +14,7 @@ var (
 type cHello struct{}
 
 func (c *cHello) Hello(ctx context.Context, req *v1.HelloReq) (res *v1.HelloRes, err error) {
-	logger.Print(ctx, "Hello req：", req)
+	logger.Info(ctx, "Hello req：", req)
 	response.JsonOK(ctx, "Hello World!")
 	return
 }
