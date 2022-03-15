@@ -23,7 +23,7 @@ var (
 
 type cView struct{}
 
-func (c *cView) View(ctx context.Context, req *v1.ViewReq) (res *v1.ViewRes, err error) {
+func (c *cView) View(ctx context.Context, req *v1.ViewViewReq) (res *v1.ViewViewRes, err error) {
 	logger.Print(ctx, "View req：", req)
 	if req.FileWay == "local" {
 		// 本地文件预览
