@@ -28,7 +28,6 @@ func ComparePath(a string, b string) bool {
 // Doexec 直接通过字符串执行shell命令，不拼接命令
 func Doexec(cmdStr string) (string, bool) {
 	cmd := exec.Command("bash", "-c", cmdStr)
-	log.Println("Doexec cmd: ", cmd)
 	buf, err := cmd.CombinedOutput()
 	if err != nil {
 		log.Println("Doexec Error: <", err.Error(), "> when exec command read out buffer")
@@ -106,9 +105,7 @@ func IsInArr(key string, arr []string) bool {
 // 执行shell命令
 func interactiveToexec(commandName string, params []string) (string, bool) {
 	cmd := exec.Command(commandName, params...)
-	log.Println("interactiveToexec cmd: ", cmd)
 	buf, err := cmd.Output()
-	log.Println("interactiveToexec buf", string(buf), err)
 	w := bytes.NewBuffer(nil)
 	cmd.Stderr = w
 	if err != nil {

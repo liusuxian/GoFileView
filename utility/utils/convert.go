@@ -13,6 +13,8 @@ func ConvertToPDF(filePath string) string {
 	// 判断转换后的pdf文件是否已经存在
 	fileName := strings.Split(path.Base(filePath), ".")[0] + ".pdf"
 	fileOld := "cache/pdf/" + fileName
+	log.Println("ConvertToPDF filePath: ", filePath)
+	log.Println("ConvertToPDF fileOld: ", fileOld)
 	if FileExit(fileOld) {
 		return fileOld
 	}
@@ -24,16 +26,15 @@ func ConvertToPDF(filePath string) string {
 		params = []string{"/c", "soffice", "--headless", "--invisible", "--convert-to", "pdf", "--outdir", "cache/pdf/", filePath}
 	} else if runtime.GOOS == "linux" {
 		commandName = "libreoffice"
-		log.Println("ConvertToPDF filePath: ", filePath)
 		params = []string{"--invisible", "--headless", "--convert-to", "pdf", "--outdir", "cache/pdf/", filePath}
 	}
 
 	if _, ok := interactiveToexec(commandName, params); ok {
 		resultPath := "cache/pdf/" + strings.Split(path.Base(filePath), ".")[0] + ".pdf"
 		if PathExists(resultPath) {
-			log.Printf("ConvertToPDF Convert <%s> to pdf\n", path.Base(filePath))
 			return resultPath
 		} else {
+			log.Println("ConvertToPDF resultPath NotExists: ", resultPath)
 			return ""
 		}
 	} else {
@@ -45,6 +46,7 @@ func ConvertToPDF(filePath string) string {
 func ConvertToImg(filePath string) string {
 	fileName := strings.Split(path.Base(filePath), ".")[0]
 	fileExt := path.Ext(filePath)
+	log.Println("ConvertToImg filePath: ", filePath)
 	if fileExt != ".pdf" {
 		return ""
 	}
@@ -74,10 +76,9 @@ func ConvertToImg(filePath string) string {
 	if _, ok := interactiveToexec(commandName, params); ok {
 		resultPath := "cache/convert/" + strings.Split(path.Base(filePath), ".")[0]
 		if PathExists(resultPath) {
-			log.Printf("ConvertToImg Convert <%s> to images\n", path.Base(filePath))
-			log.Println("ConvertToImg resultPath: ", resultPath)
 			return resultPath
 		} else {
+			log.Println("ConvertToImg resultPath NotExists: ", resultPath)
 			return ""
 		}
 	} else {
@@ -90,6 +91,8 @@ func MsgToPdf(filePath string) string {
 	// 判断转换后的pdf文件是否已经存在
 	fileName := strings.Split(path.Base(filePath), ".")[0] + ".pdf"
 	fileOld := "cache/pdf/" + fileName
+	log.Println("ConvertToPDF filePath: ", filePath)
+	log.Println("ConvertToPDF fileOld: ", fileOld)
 	if FileExit(fileOld) {
 		return fileOld
 	}
@@ -104,9 +107,9 @@ func MsgToPdf(filePath string) string {
 	if _, ok := interactiveToexec(commandName, params); ok {
 		resultPath := "cache/pdf/" + strings.Split(path.Base(filePath), ".")[0] + ".pdf"
 		if PathExists(resultPath) {
-			log.Printf("MsgToPdf Convert <%s> to pdf\n", path.Base(filePath))
 			return resultPath
 		} else {
+			log.Println("MsgToPdf resultPath NotExists: ", resultPath)
 			return ""
 		}
 	} else {

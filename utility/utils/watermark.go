@@ -23,9 +23,9 @@ func WaterMark(pdfPath string, watermark string) string {
 	if _, ok := Doexec(cmdStr); ok {
 		resultPath := "cache/pdf/" + fileName
 		if PathExists(resultPath) {
-			log.Printf("WaterMark Convert <%s> to pdf\n", path.Base(resultPath))
 			return resultPath
 		} else {
+			log.Println("WaterMark resultPath NotExists: ", resultPath)
 			return ""
 		}
 	} else {
