@@ -21,6 +21,7 @@ var (
 				group.Middleware(ghttp.MiddlewareHandlerResponse)
 				group.Bind(
 					controller.Hello,
+					controller.View,
 				)
 			})
 			gres.Dump() // 打印出当前资源管理器中所有的文件列表
