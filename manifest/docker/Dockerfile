@@ -1,4 +1,4 @@
-FROM centos:7.4.1708
+FROM centos:7.9.2009
 MAINTAINER liusuxian "382185882@qq.com"
 COPY fonts/* /usr/share/fonts/ChineseFonts/
 
