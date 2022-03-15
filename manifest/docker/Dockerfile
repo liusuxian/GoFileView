@@ -14,11 +14,16 @@ ENV LC_ALL en_US.UTF-8
 ENV TZ=Asia/Shanghai
 
 # Install cURL
-RUN echo -e "https://dl-cdn.alpinelinux.org/alpine/v3.8/main/\n" \
-            "https://dl-cdn.alpinelinux.org/alpine/v3.7/main/\n" \
-            "https://dl-cdn.alpinelinux.org/alpine/v3.6/main/\n" \
-            "https://dl-cdn.alpinelinux.org/alpine/v3.5/main/\n" \
-            "https://mirror1.hs-esslingen.de/pub/Mirrors/alpine/edge/community/\n" \
+#RUN echo -e "https://dl-cdn.alpinelinux.org/alpine/v3.9/main/\n" \
+#            "https://dl-cdn.alpinelinux.org/alpine/v3.8/main/\n" \
+#            "https://dl-cdn.alpinelinux.org/alpine/v3.7/main/\n" \
+#            "https://dl-cdn.alpinelinux.org/alpine/v3.6/main/\n" \
+#            "https://dl-cdn.alpinelinux.org/alpine/v3.5/main/\n" \
+#            "https://mirror1.hs-esslingen.de/pub/Mirrors/alpine/edge/community/\n" \
+#            "https://nl.alpinelinux.org/alpine/edge/main/\n" \
+#            "https://nl.alpinelinux.org/alpine/edge/community/\n" \
+#            > /etc/apk/repositories
+RUN echo -e "https://mirror1.hs-esslingen.de/pub/Mirrors/alpine/edge/community/\n" \
             "https://nl.alpinelinux.org/alpine/edge/main/\n" \
             "https://nl.alpinelinux.org/alpine/edge/community/\n" \
             > /etc/apk/repositories
