@@ -29,6 +29,7 @@ func ComparePath(a string, b string) bool {
 // Doexec 直接通过字符串执行shell命令，不拼接命令
 func Doexec(cmdStr string) (string, bool) {
 	cmd := exec.Command("bash", "-c", cmdStr)
+	log.Println("Doexec cmd: ", cmd)
 	buf, err := cmd.CombinedOutput()
 	if err != nil {
 		log.Println("Doexec Error: <", err.Error(), "> when exec command read out buffer")

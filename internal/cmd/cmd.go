@@ -19,7 +19,7 @@ var (
 		Brief: "start http server",
 		Func: func(ctx context.Context, parser *gcmd.Parser) (err error) {
 			s := g.Server()
-			serverRoot := g.Cfg().MustGet(ctx, "server.serverRoot").String()
+			serverRoot := g.Cfg().MustGet(ctx, "server.serverRoot", "resource/public").String()
 			s.AddStaticPath("/static", serverRoot+"/resource")
 			s.Group("/", func(group *ghttp.RouterGroup) {
 				group.Middleware(

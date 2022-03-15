@@ -9,12 +9,7 @@ import (
 // WaterMark pdf增加水印
 func WaterMark(pdfPath string, watermark string) string {
 	if watermark == "" {
-		watermarkVar, err := g.Config().Get(gctx.New(), "WaterMark.default")
-		if err != nil {
-			log.Println("WaterMark 获取水印配置 Error: <", err.Error(), ">")
-			return ""
-		}
-		watermark = watermarkVar.String()
+		watermark = g.Cfg().MustGet(gctx.New(), "WaterMark.default", "liusuxian").String()
 	}
 	fileName := watermark + "_" + GetFilenameOnly(pdfPath) + ".pdf"
 	cmdStr := "/usr/local/pdfcpu watermark add -mode text -- " + "\"" + watermark + "\"" + "  \"sc:1, rot:45, mo:2,op:.3, color:.8 .8 .4\" " + pdfPath + " cache/pdf/" + fileName
