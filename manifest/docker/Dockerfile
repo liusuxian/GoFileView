@@ -1,4 +1,4 @@
-FROM centos:latest
+FROM centos:8.5.2111
 # LABLE 给镜像添加元数据
 # MAINTAINER 维护者信息
 LABEL MAINTAINER="liusuxian 382185882@qq.com"
