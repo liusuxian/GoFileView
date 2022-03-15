@@ -9,13 +9,13 @@ import (
 )
 
 var (
-	ViewOffice = cViewOffice{}
+	Office = cOffice{}
 )
 
-type cViewOffice struct{}
+type cOffice struct{}
 
-func (c *cViewOffice) Office(ctx context.Context, req *v1.ViewOfficeReq) (res *v1.ViewOfficeRes, err error) {
-	logger.Info(ctx, "ViewOffice req：", req)
+func (c *cOffice) Office(ctx context.Context, req *v1.OfficeReq) (res *v1.OfficeRes, err error) {
+	logger.Info(ctx, "Office req：", req)
 	imgPath := req.Url
 	DataByte, err := ioutil.ReadFile("cache/convert/" + imgPath)
 	if err != nil {

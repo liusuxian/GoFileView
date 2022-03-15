@@ -9,13 +9,13 @@ import (
 )
 
 var (
-	ViewImg = cViewImg{}
+	Img = cImg{}
 )
 
-type cViewImg struct{}
+type cImg struct{}
 
-func (c *cViewImg) Img(ctx context.Context, req *v1.ViewImgReq) (res *v1.ViewImgRes, err error) {
-	logger.Info(ctx, "ViewImg req：", req)
+func (c *cImg) Img(ctx context.Context, req *v1.ImgReq) (res *v1.ImgRes, err error) {
+	logger.Info(ctx, "Img req：", req)
 	imgPath := req.Url
 	DataByte, err := ioutil.ReadFile("cache/download/" + imgPath)
 	if err != nil {

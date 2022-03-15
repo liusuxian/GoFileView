@@ -9,13 +9,13 @@ import (
 )
 
 var (
-	ViewPdf = cViewPdf{}
+	Pdf = cPdf{}
 )
 
-type cViewPdf struct{}
+type cPdf struct{}
 
-func (c *cViewPdf) Pdf(ctx context.Context, req *v1.ViewPdfReq) (res *v1.ViewPdfRes, err error) {
-	logger.Info(ctx, "ViewPdf req：", req)
+func (c *cPdf) Pdf(ctx context.Context, req *v1.PdfReq) (res *v1.PdfRes, err error) {
+	logger.Info(ctx, "Pdf req：", req)
 	imgPath := req.Url
 	DataByte, err := ioutil.ReadFile("cache/pdf/" + imgPath)
 	if err != nil {

@@ -16,13 +16,13 @@ import (
 var filePath string
 
 var (
-	ViewView = cViewView{}
+	View = cView{}
 )
 
-type cViewView struct{}
+type cView struct{}
 
-func (c *cViewView) View(ctx context.Context, req *v1.ViewViewReq) (res *v1.ViewViewRes, err error) {
-	logger.Info(ctx, "ViewView req：", req)
+func (c *cView) View(ctx context.Context, req *v1.ViewReq) (res *v1.ViewRes, err error) {
+	logger.Info(ctx, "View req：", req)
 	if req.FileWay == "local" {
 		// 本地文件预览
 		filePath = req.Url
