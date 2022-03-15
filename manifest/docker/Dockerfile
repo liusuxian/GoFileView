@@ -23,9 +23,9 @@ ENV TZ=Asia/Shanghai
 #            "https://nl.alpinelinux.org/alpine/edge/main/\n" \
 #            "https://nl.alpinelinux.org/alpine/edge/community/\n" \
 #            > /etc/apk/repositories
-RUN echo -e "https://mirrors.ustc.edu.cn/alpine/latest-stable/community/\n https://mirrors.ustc.edu.cn/alpine/edge/community/\n" > /etc/apk/repositories
+RUN echo -e "https://mirrors.ustc.edu.cn/alpine/latest-stable/main\n https://mirrors.ustc.edu.cn/alpine/latest-stable/community\n" > /etc/apk/repositories
 # RUN apk --update add curl bash openjdk8 && rm -rf /var/cache/apk/*
-RUN apk --update add openjdk8-8.312.07-r0.apk && rm -rf /var/cache/apk/*
+RUN apk update && apk add --no-cache curl bash openjdk8
 # Set environment
 ENV JAVA_HOME /usr/lib/jvm/default-jvm
 ENV PATH ${PATH}:${JAVA_HOME}/bin
