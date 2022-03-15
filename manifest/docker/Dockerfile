@@ -25,7 +25,7 @@ ENV TZ=Asia/Shanghai
 #            > /etc/apk/repositories
 RUN echo -e "https://mirrors.ustc.edu.cn/alpine/latest-stable/community/\n https://mirrors.ustc.edu.cn/alpine/edge/community/\n" > /etc/apk/repositories
 # RUN apk --update add curl bash openjdk8 && rm -rf /var/cache/apk/*
-RUN apk --update add openjdk8-8.312.07-r0 && rm -rf /var/cache/apk/*
+RUN apk --update add openjdk8-8.312.07-r0.apk && rm -rf /var/cache/apk/*
 # Set environment
 ENV JAVA_HOME /usr/lib/jvm/default-jvm
 ENV PATH ${PATH}:${JAVA_HOME}/bin
