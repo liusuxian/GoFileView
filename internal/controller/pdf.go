@@ -5,7 +5,9 @@ import (
 	"GoFileView/utility/logger"
 	"GoFileView/utility/response"
 	"context"
+	"github.com/gogf/gf/v2/frame/g"
 	"io/ioutil"
+	"strconv"
 )
 
 var (
@@ -22,6 +24,10 @@ func (c *cPdf) Pdf(ctx context.Context, req *v1.PdfReq) (res *v1.PdfRes, err err
 		return
 	}
 
-	response.HtmlPageOK(ctx, DataByte)
+	g.RequestFromCtx(ctx).Response.Writer.Header().Set("content-length", strconv.Itoa(len(DataByte)))
+	_, err = g.RequestFromCtx(ctx).Response.Writer.Write(DataByte)
+	if err != nil {
+		logger.Error(ctx, "Pdf Error:", err.Error())
+	}
 	return
 }
