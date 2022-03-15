@@ -14,18 +14,8 @@ ENV LC_ALL en_US.UTF-8
 ENV TZ=Asia/Shanghai
 
 # Install cURL
-#RUN echo -e "https://dl-cdn.alpinelinux.org/alpine/v3.9/main/\n" \
-#            "https://dl-cdn.alpinelinux.org/alpine/v3.8/main/\n" \
-#            "https://dl-cdn.alpinelinux.org/alpine/v3.7/main/\n" \
-#            "https://dl-cdn.alpinelinux.org/alpine/v3.6/main/\n" \
-#            "https://dl-cdn.alpinelinux.org/alpine/v3.5/main/\n" \
-#            "https://mirror1.hs-esslingen.de/pub/Mirrors/alpine/edge/community/\n" \
-#            "https://nl.alpinelinux.org/alpine/edge/main/\n" \
-#            "https://nl.alpinelinux.org/alpine/edge/community/\n" \
-#            > /etc/apk/repositories
 RUN echo -e "https://mirrors.ustc.edu.cn/alpine/latest-stable/main\n https://mirrors.ustc.edu.cn/alpine/latest-stable/community\n" > /etc/apk/repositories
-# RUN apk --update add curl bash openjdk8 && rm -rf /var/cache/apk/*
-RUN apk update && apk add --no-cache curl bash openjdk8
+RUN apk --update add --no-cache openjdk8
 # Set environment
 ENV JAVA_HOME /usr/lib/jvm/default-jvm
 ENV PATH ${PATH}:${JAVA_HOME}/bin
