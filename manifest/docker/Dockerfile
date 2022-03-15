@@ -23,8 +23,8 @@ ENV TZ=Asia/Shanghai
 #            "https://nl.alpinelinux.org/alpine/edge/main/\n" \
 #            "https://nl.alpinelinux.org/alpine/edge/community/\n" \
 #            > /etc/apk/repositories
-RUN echo -e "https://mirror1.hs-esslingen.de/pub/Mirrors/alpine/edge/community/\n" > /etc/apk/repositories
-RUN apk --update add curl bash java-cacerts openjdk8-jre-base && rm -rf /var/cache/apk/*
+RUN echo -e "https://mirrors.ustc.edu.cn/alpine/latest-stable/community/\n" > /etc/apk/repositories
+RUN apk --update add curl bash openjdk8-jre-base && rm -rf /var/cache/apk/*
 # Set environment
 ENV JAVA_HOME /usr/lib/jvm/default-jvm
 ENV PATH ${PATH}:${JAVA_HOME}/bin
