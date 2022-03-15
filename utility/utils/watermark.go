@@ -13,7 +13,7 @@ func WaterMark(pdfPath string, watermark string) string {
 	if watermark == "" {
 		watermarkVar, err := g.Config().Get(gctx.New(), "WaterMark.default")
 		if err != nil {
-			log.Println("获取水印配置 Error: <", err.Error(), ">")
+			log.Println("WaterMark 获取水印配置 Error: <", err.Error(), ">")
 			return ""
 		}
 		watermark = watermarkVar.String()
@@ -23,7 +23,7 @@ func WaterMark(pdfPath string, watermark string) string {
 	if _, ok := Doexec(cmdStr); ok {
 		resultPath := "cache/pdf/" + fileName
 		if PathExists(resultPath) {
-			log.Printf("Convert <%s> to pdf\n", path.Base(resultPath))
+			log.Printf("WaterMark Convert <%s> to pdf\n", path.Base(resultPath))
 			return resultPath
 		} else {
 			return ""

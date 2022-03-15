@@ -28,10 +28,10 @@ func ComparePath(a string, b string) bool {
 // Doexec 直接通过字符串执行shell命令，不拼接命令
 func Doexec(cmdStr string) (string, bool) {
 	cmd := exec.Command("bash", "-c", cmdStr)
-	log.Println("cmd: ", cmd)
+	log.Println("Doexec cmd: ", cmd)
 	buf, err := cmd.CombinedOutput()
 	if err != nil {
-		log.Println("Error: <", err.Error(), "> when exec command read out buffer")
+		log.Println("Doexec Error: <", err.Error(), "> when exec command read out buffer")
 		return "", false
 	} else {
 		return string(buf), true
@@ -71,13 +71,13 @@ func PathExists(path string) bool {
 func GetFileMD5(filePath string) string {
 	f, err := os.Open(filePath)
 	if err != nil {
-		log.Println("Error: <", err, "> when open file to get md5")
+		log.Println("GetFileMD5 Error: <", err, "> when open file to get md5")
 		return ""
 	}
 	defer f.Close()
 	md5hash := md5.New()
 	if _, err := io.Copy(md5hash, f); err != nil {
-		log.Println("Error: <", err, "> when get md5")
+		log.Println("GetFileMD5 Error: <", err, "> when get md5")
 		return ""
 	}
 	f.Close()
@@ -106,13 +106,13 @@ func IsInArr(key string, arr []string) bool {
 // 执行shell命令
 func interactiveToexec(commandName string, params []string) (string, bool) {
 	cmd := exec.Command(commandName, params...)
-	log.Println("cmd: ", cmd)
+	log.Println("interactiveToexec cmd: ", cmd)
 	buf, err := cmd.Output()
-	log.Println(string(buf), err)
+	log.Println("interactiveToexec buf", string(buf), err)
 	w := bytes.NewBuffer(nil)
 	cmd.Stderr = w
 	if err != nil {
-		log.Println("Error: <", err.Error(), "> when exec command read out buffer")
+		log.Println("interactiveToexec Error: <", err.Error(), "> when exec command read out buffer")
 		return "", false
 	} else {
 		return string(buf), true

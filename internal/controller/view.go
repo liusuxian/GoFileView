@@ -83,14 +83,17 @@ func (c *cView) View(ctx context.Context, req *v1.ViewReq) (res *v1.ViewRes, err
 	// 除了PDF外的其他word文件  (如果没有安装ImageMagick，可以将这个分支去掉)
 	if utils.IsInArr(fileType, service.AllOfficeEtx) && req.Type != "pdf" {
 		pdfPath := utils.ConvertToPDF(filePath)
+		logger.Debug(ctx, "pdfPath: ", pdfPath)
 		if pdfPath == "" {
 			response.JsonExit(ctx, consts.CodeConvertToPdfFailed.Code(), consts.CodeConvertToPdfFailed.Message())
 		}
 		waterPdf := utils.WaterMark(pdfPath, req.WaterMark)
+		logger.Debug(ctx, "waterPdf: ", waterPdf)
 		if waterPdf == "" {
 			response.JsonExit(ctx, consts.CodeAddWaterMarkFailed.Code(), consts.CodeAddWaterMarkFailed.Message())
 		}
 		imgPath := utils.ConvertToImg(waterPdf)
+		logger.Debug(ctx, "imgPath: ", imgPath)
 		if imgPath == "" {
 			response.JsonExit(ctx, consts.CodeConvertToImgFailed.Code(), consts.CodeConvertToImgFailed.Message())
 		}

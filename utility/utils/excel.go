@@ -9,7 +9,7 @@ import (
 func ExcelParse(filePath string) []map[string]interface{} {
 	xlFile, err := xlsx.OpenFile(filePath)
 	if err != nil {
-		log.Println("ExcelParseError: <", err.Error(), ">")
+		log.Println("ExcelParse Error: <", err.Error(), ">")
 	}
 	var resData []map[string]interface{}
 
