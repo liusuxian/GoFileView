@@ -25,6 +25,12 @@ func JsonExit(ctx context.Context, code int, message string) {
 	g.Throw("exit")
 }
 
+// JsonResExit 返回JSON数据并退出当前HTTP执行函数。
+func JsonResExit(ctx context.Context, code int, message string, data interface{}) {
+	Json(ctx, code, message, data)
+	g.Throw("exit")
+}
+
 // Json 标准返回结果数据结构封装。
 func Json(ctx context.Context, code int, message string, data interface{}) {
 	err := g.RequestFromCtx(ctx).Response.WriteJson(JsonResponse{

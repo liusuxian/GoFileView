@@ -36,9 +36,11 @@ RUN mkdir -p $WORKDIR/cache/pdf/
 
 # jar包，用于将.msg文件转eml文件
 COPY utility/emailconverter-2.5.3-all.jar /usr/local/emailconverter-2.5.3-all.jar
+RUN chmod +x /usr/local/emailconverter-2.5.3-all.jar
 
 # pdf 添加水印
 COPY utility/pdfcpu /usr/local/pdfcpu
+RUN chmod +x /usr/local/pdfcpu
 
 # 安装wkhtmltopdf 用于将eml（html）文件转pdf
 RUN yum -y install wget &&\
