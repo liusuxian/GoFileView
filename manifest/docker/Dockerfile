@@ -1,4 +1,4 @@
-FROM loads/alpine:3.8
+FROM alpine:latest
 # LABLE 给镜像添加元数据
 # MAINTAINER 维护者信息
 LABEL maintainer="382185882@qq.com"
