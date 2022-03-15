@@ -14,8 +14,7 @@ ENV LC_ALL en_US.UTF-8
 ENV TZ=Asia/Shanghai
 
 # Install cURL
-RUN echo -e "https://dl-cdn.alpinelinux.org/alpine/v3.9/main/\n" \
-            "https://dl-cdn.alpinelinux.org/alpine/v3.8/main/\n" \
+RUN echo -e "https://dl-cdn.alpinelinux.org/alpine/v3.8/main/\n" \
             "https://dl-cdn.alpinelinux.org/alpine/v3.7/main/\n" \
             "https://dl-cdn.alpinelinux.org/alpine/v3.6/main/\n" \
             "https://dl-cdn.alpinelinux.org/alpine/v3.5/main/\n" \
