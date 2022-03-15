@@ -1,4 +1,4 @@
-FROM centos:latest
+FROM centos:7.2.1511
 MAINTAINER liusuxian "382185882@qq.com"
 COPY fonts/* /usr/share/fonts/ChineseFonts/
 
@@ -43,9 +43,9 @@ COPY utility/pdfcpu /usr/local/pdfcpu
 
 # 安装wkhtmltopdf 用于将eml（html）文件转pdf
 RUN yum -y install wget &&\
-    wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox-0.12.5-1.centos8.x86_64.rpm &&\
+    wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox-0.12.5-1.centos7.x86_64.rpm &&\
     rpm --rebuilddb && yum install -y openssl && yum install -y xorg-x11-fonts-75dpi &&\
-    rpm -ivh wkhtmltox-0.12.5-1.centos8.x86_64.rpm
+    rpm -ivh wkhtmltox-0.12.5-1.centos7.x86_64.rpm
 
 ###############################################################################
 #                                   START
