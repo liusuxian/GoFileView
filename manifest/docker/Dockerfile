@@ -31,7 +31,7 @@ ENV PATH ${PATH}:${JAVA_HOME}/bin
 RUN apk add --no-cache libreoffice &&\
     apk add --no-cache libreoffice-writer &&\
     apk add --no-cache ImageMagick &&\
-    export DISPLAY=:0.0 \
+    export DISPLAY=:0.0
 
 #RUN yum install java -y
 #
