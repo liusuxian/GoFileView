@@ -9,6 +9,7 @@ import (
 	"math/rand"
 	"os"
 	"os/exec"
+	"path"
 	"strings"
 	"time"
 )
@@ -81,6 +82,13 @@ func GetFileMD5(filePath string) string {
 	}
 	f.Close()
 	return fmt.Sprintf("%x", md5hash.Sum(nil))
+}
+
+// GetFilenameOnly 获取路径中不带后缀的文件名
+func GetFilenameOnly(filePath string) string {
+	filenameWithSuffix := path.Base(filePath)
+	fileSuffix := path.Ext(filenameWithSuffix)
+	return strings.TrimSuffix(filenameWithSuffix, fileSuffix)
 }
 
 func RandString(len int) string {

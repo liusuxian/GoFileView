@@ -5,13 +5,12 @@ import (
 	"os"
 	"path"
 	"runtime"
-	"strings"
 )
 
 // ConvertToPDF 转pdf
 func ConvertToPDF(filePath string) string {
 	// 判断转换后的pdf文件是否已经存在
-	fileName := strings.Split(path.Base(filePath), ".")[0] + ".pdf"
+	fileName := GetFilenameOnly(filePath) + ".pdf"
 	fileOld := "cache/pdf/" + fileName
 	log.Println("ConvertToPDF filePath: ", filePath)
 	log.Println("ConvertToPDF fileOld: ", fileOld)
@@ -30,7 +29,7 @@ func ConvertToPDF(filePath string) string {
 	}
 
 	if _, ok := interactiveToexec(commandName, params); ok {
-		resultPath := "cache/pdf/" + strings.Split(path.Base(filePath), ".")[0] + ".pdf"
+		resultPath := "cache/pdf/" + GetFilenameOnly(filePath) + ".pdf"
 		if PathExists(resultPath) {
 			return resultPath
 		} else {
@@ -44,7 +43,7 @@ func ConvertToPDF(filePath string) string {
 
 // ConvertToImg 转图片
 func ConvertToImg(filePath string) string {
-	fileName := strings.Split(path.Base(filePath), ".")[0]
+	fileName := GetFilenameOnly(filePath)
 	fileExt := path.Ext(filePath)
 	log.Println("ConvertToImg filePath: ", filePath)
 	if fileExt != ".pdf" {
@@ -74,7 +73,7 @@ func ConvertToImg(filePath string) string {
 		params = []string{"-density", "150", filePath, "cache/convert/" + fileName + "/%d.jpg"}
 	}
 	if _, ok := interactiveToexec(commandName, params); ok {
-		resultPath := "cache/convert/" + strings.Split(path.Base(filePath), ".")[0]
+		resultPath := "cache/convert/" + GetFilenameOnly(filePath)
 		if PathExists(resultPath) {
 			return resultPath
 		} else {
@@ -89,7 +88,7 @@ func ConvertToImg(filePath string) string {
 // MsgToPdf 只支持linux
 func MsgToPdf(filePath string) string {
 	// 判断转换后的pdf文件是否已经存在
-	fileName := strings.Split(path.Base(filePath), ".")[0] + ".pdf"
+	fileName := GetFilenameOnly(filePath) + ".pdf"
 	fileOld := "cache/pdf/" + fileName
 	log.Println("ConvertToPDF filePath: ", filePath)
 	log.Println("ConvertToPDF fileOld: ", fileOld)
@@ -105,7 +104,7 @@ func MsgToPdf(filePath string) string {
 		params = []string{"-jar", "/usr/local/emailconverter-2.5.3-all.jar", filePath, "-o ", "cache/pdf/" + fileName}
 	}
 	if _, ok := interactiveToexec(commandName, params); ok {
-		resultPath := "cache/pdf/" + strings.Split(path.Base(filePath), ".")[0] + ".pdf"
+		resultPath := "cache/pdf/" + GetFilenameOnly(filePath) + ".pdf"
 		if PathExists(resultPath) {
 			return resultPath
 		} else {

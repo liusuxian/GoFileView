@@ -94,7 +94,7 @@ func MdPage(filepath string) []byte {
 }
 
 func IsHave(fileName string) bool {
-	fileName = strings.Split(fileName, ".")[0]
+	fileName = utils.GetFilenameOnly(fileName)
 	if _, ok := AllFile[fileName]; ok {
 		AllFile[fileName].LastActiveTime = time.Now().Unix()
 		return true
@@ -105,7 +105,7 @@ func IsHave(fileName string) bool {
 
 func SetFileMap(fileName string) {
 	ext := path.Ext(fileName)
-	fileName = strings.Split(fileName, ".")[0]
+	fileName = utils.GetFilenameOnly(fileName)
 	if _, ok := AllFile[fileName]; ok {
 		AllFile[fileName].LastActiveTime = time.Now().Unix()
 		return

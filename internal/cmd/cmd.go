@@ -27,9 +27,11 @@ var (
 					service.Middleware().CORS,
 					ghttp.MiddlewareHandlerResponse,
 				)
+				group.Bind(
+					controller.Hello,
+				)
 				group.Group("/view", func(group *ghttp.RouterGroup) {
 					group.Bind(
-						controller.Hello,
 						controller.View,
 						controller.Img,
 						controller.Pdf,
