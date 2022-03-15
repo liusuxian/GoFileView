@@ -53,11 +53,13 @@ func (c *cView) View(ctx context.Context, req *v1.ViewViewReq) (res *v1.ViewView
 			response.JsonExit(ctx, consts.CodeConvertToImgFailed.Code(), consts.CodeConvertToImgFailed.Message())
 		}
 		dataByte := service.OfficePage("cache/convert/" + path.Base(imgPath))
+		logger.Print(ctx, dataByte)
 		g.RequestFromCtx(ctx).Response.Writer.Header().Set("content-length", strconv.Itoa(len(dataByte)))
 		g.RequestFromCtx(ctx).Response.Writer.Header().Set("content-type:", "text/html;charset=UTF-8")
 		g.RequestFromCtx(ctx).Response.Writer.Write(dataByte)
 		return
 	}
 
+	response.JsonExit(ctx, consts.CodeFileTypeNonsupportPreview.Code(), consts.CodeFileTypeNonsupportPreview.Message())
 	return
 }

@@ -31,14 +31,14 @@ var (
 
 func OfficePage(imgPath string) []byte {
 	rd, _ := ioutil.ReadDir(imgPath)
-	dataByte, _ := ioutil.ReadFile("public/html/office.html")
+	dataByte, _ := ioutil.ReadFile("resource/public/html/office.html")
 	dataStr := string(dataByte)
 	htmlCode := ""
 	for i := 0; i < len(rd); i++ {
 		htmlCode = htmlCode +
 			`<img class="my-photo" alt="loading" title="查看大图" style="cursor: pointer;"
 		 data-src="/view/office?url=` + path.Base(imgPath) + "/" + gconv.String(i) + ".jpg" +
-			`" src="images/loading.gif" ">`
+			`" src="resource/public/resource/image/loading.gif" ">`
 
 	}
 	dataStr = strings.Replace(dataStr, "{{AllImages}}", htmlCode, -1)
