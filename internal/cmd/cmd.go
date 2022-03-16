@@ -19,8 +19,11 @@ var (
 		Brief: "start http server",
 		Func: func(ctx context.Context, parser *gcmd.Parser) (err error) {
 			s := g.Server()
+			// 获取静态文件路径配置
 			serverRoot := g.Cfg().MustGet(ctx, "server.serverRoot", "resource/public").String()
+			// 设置静态文件目录
 			s.AddStaticPath("/static", serverRoot+"/resource")
+
 			s.Group("/", func(group *ghttp.RouterGroup) {
 				group.Middleware(
 					service.Middleware().Ctx,
@@ -42,12 +45,14 @@ var (
 				})
 			})
 			// 每天凌晨两点清理服务器文件
-			_, err = gcron.Add(ctx, "0 0 2 * * *", service.ClearFile)
-			if err != nil {
-				logger.Error(ctx, "ClearFile Error: ", err.Error())
-				return err
+			_, clearErr := gcron.Add(ctx, "0 0 2 * * *", service.ClearFile)
+			if clearErr != nil {
+				logger.Error(ctx, "ClearFile Error: ", clearErr.Error())
+				return clearErr
 			}
-			gres.Dump() // 打印出当前资源管理器中所有的文件列表
+			// 打印出当前资源管理器中所有的文件列表
+			gres.Dump()
+
 			s.Run()
 			return nil
 		},
