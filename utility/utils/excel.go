@@ -6,16 +6,16 @@ import (
 )
 
 // ExcelParse excel解析
-func ExcelParse(filePath string) []map[string]interface{} {
+func ExcelParse(filePath string) []map[string]any {
 	xlFile, err := xlsx.OpenFile(filePath)
 	if err != nil {
 		log.Println("ExcelParse Error: <", err.Error(), ">")
 	}
-	var resData []map[string]interface{}
+	var resData []map[string]any
 
 	//遍历sheet
 	for _, sheet := range xlFile.Sheets {
-		tmp := map[string]interface{}{}
+		tmp := map[string]any{}
 		//遍历每一行
 		var title []string
 		var resourceArr [][]string

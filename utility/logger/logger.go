@@ -14,74 +14,74 @@ func Log(name ...string) *glog.Logger {
 	return g.Log().Skip(1).Line()
 }
 
-func Print(ctx context.Context, v ...interface{}) {
+func Print(ctx context.Context, v ...any) {
 	Log("access").Print(ctx, v)
 }
 
-func Printf(ctx context.Context, format string, v ...interface{}) {
+func Printf(ctx context.Context, format string, v ...any) {
 	Log("access").Printf(ctx, format, v)
 }
 
-func Info(ctx context.Context, v ...interface{}) {
+func Info(ctx context.Context, v ...any) {
 	Log("access").Info(ctx, v)
 }
 
-func Infof(ctx context.Context, format string, v ...interface{}) {
+func Infof(ctx context.Context, format string, v ...any) {
 	Log("access").Infof(ctx, format, v)
 }
 
-func Debug(ctx context.Context, v ...interface{}) {
+func Debug(ctx context.Context, v ...any) {
 	Log("access").Debug(ctx, v)
 }
 
-func Debugf(ctx context.Context, format string, v ...interface{}) {
+func Debugf(ctx context.Context, format string, v ...any) {
 	Log("access").Debugf(ctx, format, v)
 }
 
-func Notice(ctx context.Context, v ...interface{}) {
+func Notice(ctx context.Context, v ...any) {
 	Log("access").Notice(ctx, v)
 }
 
-func Noticef(ctx context.Context, format string, v ...interface{}) {
+func Noticef(ctx context.Context, format string, v ...any) {
 	Log("access").Noticef(ctx, format, v)
 }
 
-func Warning(ctx context.Context, v ...interface{}) {
+func Warning(ctx context.Context, v ...any) {
 	Log("error").Warning(ctx, v)
 }
 
-func Warningf(ctx context.Context, format string, v ...interface{}) {
+func Warningf(ctx context.Context, format string, v ...any) {
 	Log("error").Warningf(ctx, format, v)
 }
 
-func Error(ctx context.Context, v ...interface{}) {
+func Error(ctx context.Context, v ...any) {
 	Log("error").Error(ctx, v)
 }
 
-func Errorf(ctx context.Context, format string, v ...interface{}) {
+func Errorf(ctx context.Context, format string, v ...any) {
 	Log("error").Errorf(ctx, format, v)
 }
 
-func Fatal(ctx context.Context, v ...interface{}) {
+func Fatal(ctx context.Context, v ...any) {
 	Log("error").Fatal(ctx, v)
 }
 
-func Fatalf(ctx context.Context, format string, v ...interface{}) {
+func Fatalf(ctx context.Context, format string, v ...any) {
 	Log("error").Fatalf(ctx, format, v)
 }
 
-func Critical(ctx context.Context, v ...interface{}) {
+func Critical(ctx context.Context, v ...any) {
 	Log("error").Critical(ctx, v)
 }
 
-func Criticalf(ctx context.Context, format string, v ...interface{}) {
+func Criticalf(ctx context.Context, format string, v ...any) {
 	Log("error").Criticalf(ctx, format, v)
 }
 
-func Panic(ctx context.Context, v ...interface{}) {
+func Panic(ctx context.Context, v ...any) {
 	Log("error").Panic(ctx, v)
 }
 
-func Panicf(ctx context.Context, format string, v ...interface{}) {
+func Panicf(ctx context.Context, format string, v ...any) {
 	Log("error").Panicf(ctx, format, v)
 }
