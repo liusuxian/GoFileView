@@ -17,18 +17,21 @@ var (
 type cUpload struct{}
 
 func (c *cUpload) Upload(ctx context.Context, req *v1.UploadReq) (res *v1.UploadRes, err error) {
-	files := g.RequestFromCtx(ctx).GetUploadFile("upload-file")
+	files := g.RequestFromCtx(ctx).GetUploadFiles("upload-file")
 	if files != nil {
-		var filename string
-		filename, err = files.Save("cache/local")
+		var filenames []string
+		filenames, err = files.Save("cache/local")
 		if err != nil {
 			logger.Error(ctx, "Upload Save Error:", err.Error())
 		}
-		oldFilename := "cache/local/" + filename
-		newFilename := "cache/local/" + gstr.TrimAll(gfile.Name(filename), "") + gfile.Ext(filename)
-		err = gfile.Rename(oldFilename, newFilename)
-		if err != nil {
-			logger.Error(ctx, "Upload Rename Error:", err.Error())
+
+		for _, filename := range filenames {
+			oldFilename := "cache/local/" + filename
+			newFilename := "cache/local/" + gstr.TrimAll(gfile.Name(filename), "") + gfile.Ext(filename)
+			err = gfile.Rename(oldFilename, newFilename)
+			if err != nil {
+				logger.Error(ctx, "Upload Rename Error:", err.Error())
+			}
 		}
 	}
 
