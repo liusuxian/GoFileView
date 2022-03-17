@@ -45,10 +45,10 @@ var (
 				})
 			})
 			// 每天凌晨两点清理服务器文件
-			_, clearErr := gcron.Add(ctx, "0 0 2 * * *", service.ClearFile)
-			if clearErr != nil {
-				logger.Error(ctx, "ClearFile Error: ", clearErr.Error())
-				return clearErr
+			_, err = gcron.Add(ctx, "0 0 2 * * *", service.ClearFile)
+			if err != nil {
+				logger.Error(ctx, "ClearFile Error: ", err.Error())
+				return err
 			}
 			// 打印出当前资源管理器中所有的文件列表
 			gres.Dump()

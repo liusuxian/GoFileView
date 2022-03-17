@@ -5,15 +5,9 @@ import (
 	"github.com/gogf/gf/v2/net/ghttp"
 )
 
-type sMiddleware struct {
-	LoginUrl string // 登录路由地址
-}
+type sMiddleware struct{}
 
-var (
-	insMiddleware = sMiddleware{
-		LoginUrl: "/login",
-	}
-)
+var insMiddleware = sMiddleware{}
 
 // Middleware 中间件管理服务
 func Middleware() *sMiddleware {
@@ -21,18 +15,18 @@ func Middleware() *sMiddleware {
 }
 
 // Ctx 自定义上下文对象
-func (s *sMiddleware) Ctx(r *ghttp.Request) {
+func (s *sMiddleware) Ctx(req *ghttp.Request) {
 	// 初始化，务必最开始执行
 	customCtx := &model.Context{
-		Session: r.Session,
+		Session: req.Session,
 	}
-	Context().Init(r, customCtx)
+	Context().Init(req, customCtx)
 	// 执行下一步请求逻辑
-	r.Middleware.Next()
+	req.Middleware.Next()
 }
 
 // CORS 允许接口跨域请求
-func (s *sMiddleware) CORS(r *ghttp.Request) {
-	r.Response.CORSDefault()
-	r.Middleware.Next()
+func (s *sMiddleware) CORS(req *ghttp.Request) {
+	req.Response.CORSDefault()
+	req.Middleware.Next()
 }

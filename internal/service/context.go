@@ -17,8 +17,8 @@ func Context() *sContext {
 }
 
 // Init 初始化上下文对象指针到上下文对象中，以便后续的请求流程中可以修改。
-func (s *sContext) Init(r *ghttp.Request, customCtx *model.Context) {
-	r.SetCtxVar(consts.ContextKey, customCtx)
+func (s *sContext) Init(req *ghttp.Request, customCtx *model.Context) {
+	req.SetCtxVar(consts.ContextKey, customCtx)
 }
 
 // Get 获得上下文变量，如果没有设置，那么返回nil

@@ -4,10 +4,9 @@ import (
 	v1 "GoFileView/api/v1"
 	"GoFileView/internal/service"
 	"GoFileView/utility/logger"
-	"GoFileView/utility/utils"
 	"context"
 	"github.com/gogf/gf/v2/frame/g"
-	"os"
+	"github.com/gogf/gf/v2/os/gfile"
 )
 
 var (
@@ -17,8 +16,8 @@ var (
 type cDelete struct{}
 
 func (c *cDelete) Delete(ctx context.Context, req *v1.DeleteReq) (res *v1.DeleteRes, err error) {
-	if utils.FileExit(req.Url) {
-		err = os.Remove(req.Url)
+	if gfile.Exists(req.Url) {
+		err = gfile.Remove(req.Url)
 		if err != nil {
 			logger.Error(ctx, "Delete Error: ", err.Error())
 		}
@@ -31,5 +30,6 @@ func (c *cDelete) Delete(ctx context.Context, req *v1.DeleteReq) (res *v1.Delete
 	if err != nil {
 		logger.Error(ctx, "Delete Error:", err.Error())
 	}
-	return
+
+	return res, nil
 }

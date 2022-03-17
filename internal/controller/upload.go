@@ -30,5 +30,5 @@ func (c *cUpload) Upload(ctx context.Context, req *v1.UploadReq) (res *v1.Upload
 	if err != nil {
 		logger.Error(ctx, "Upload Error:", err.Error())
 	}
-	return
+	return res, nil
 }

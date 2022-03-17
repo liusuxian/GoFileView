@@ -8,8 +8,8 @@ import (
 	"GoFileView/utility/response"
 	"GoFileView/utility/utils"
 	"context"
-	"path"
-	"strings"
+	"github.com/gogf/gf/v2/os/gfile"
+	"github.com/gogf/gf/v2/text/gstr"
 )
 
 // 本地文件路径
@@ -28,91 +28,107 @@ func (c *cView) View(ctx context.Context, req *v1.ViewReq) (res *v1.ViewRes, err
 		filePath = req.Url
 	} else {
 		// 下载文件
-		file, err := utils.DownloadFile(req.Url, "cache/download/"+path.Base(req.Url))
+		var file string
+		file, err = utils.DownloadFile(req.Url, "cache/download/"+gfile.Basename(req.Url))
 		if err != nil {
 			logger.Info(ctx, "下载文件出错: ", err.Error())
-			response.JsonExit(ctx, consts.CodeDownloadFailed.Code(), consts.CodeDownloadFailed.Message())
+			response.Json(ctx, consts.CodeDownloadFailed, nil)
+			return res, nil
 		}
 		filePath = file
 	}
-	fileType := strings.ToLower(path.Ext(filePath))
+	fileType := gstr.ToLower(gfile.Ext(filePath))
+
 	// MD 文件预览
 	if fileType == ".md" {
 		dataByte := service.MdPage(filePath)
-		response.HtmlPageOK(ctx, dataByte)
-		return
+		response.HtmlText(ctx, len(dataByte), dataByte)
+		return res, nil
 	}
+
 	// msg 或者 eml 文件预览
 	if fileType == ".msg" || fileType == ".eml" {
 		pdfPath := utils.MsgToPdf(filePath)
 		if pdfPath == "" {
-			response.JsonExit(ctx, consts.CodeConvertToPdfFailed.Code(), consts.CodeConvertToPdfFailed.Message())
+			response.Json(ctx, consts.CodeConvertToPdfFailed, nil)
+			return res, nil
 		}
 		waterPdf := utils.WaterMark(pdfPath, req.WaterMark)
 		if waterPdf == "" {
-			response.JsonExit(ctx, consts.CodeAddWaterMarkFailed.Code(), consts.CodeAddWaterMarkFailed.Message())
+			response.Json(ctx, consts.CodeAddWaterMarkFailed, nil)
+			return res, nil
 		}
 
-		dataByte := service.PdfPage("cache/pdf/" + path.Base(waterPdf))
-		response.HtmlPageOK(ctx, dataByte)
-		return
+		dataByte := service.PdfPage("cache/pdf/" + gfile.Basename(waterPdf))
+		response.HtmlText(ctx, len(dataByte), dataByte)
+		return res, nil
 	}
+
 	// 后缀是pdf直接读取文件类容返回
 	if fileType == ".pdf" {
 		waterPdf := utils.WaterMark(filePath, req.WaterMark)
 		if waterPdf == "" {
-			response.JsonExit(ctx, consts.CodeAddWaterMarkFailed.Code(), consts.CodeAddWaterMarkFailed.Message())
+			response.Json(ctx, consts.CodeAddWaterMarkFailed, nil)
+			return res, nil
 		}
 		logger.Info(ctx, "waterPdf: ", waterPdf)
-		dataByte := service.PdfPage("cache/pdf/" + path.Base(waterPdf))
-		response.HtmlPageOK(ctx, dataByte)
-		return
+		dataByte := service.PdfPage("cache/pdf/" + gfile.Basename(waterPdf))
+		response.HtmlText(ctx, len(dataByte), dataByte)
+		return res, nil
 	}
+
 	// 后缀png , jpg ,gif
-	if utils.IsInArr(fileType, service.AllImageEtx) {
+	if gstr.InArray(service.AllImageEtx, fileType) {
 		dataByte := service.ImagePage(filePath)
-		response.HtmlPageOK(ctx, dataByte)
-		return
+		response.HtmlText(ctx, len(dataByte), dataByte)
+		return res, nil
 	}
+
 	// 后缀xlsx
 	if (fileType == ".xlsx" || fileType == ".xls") && req.Type != "pdf" {
 		dataByte := service.ExcelPage(filePath)
-		response.HtmlPageOK(ctx, dataByte)
-		return
+		response.HtmlText(ctx, len(dataByte), dataByte)
+		return res, nil
 	}
+
 	// 除了PDF外的其他word文件  (如果没有安装ImageMagick，可以将这个分支去掉)
-	if utils.IsInArr(fileType, service.AllOfficeEtx) && req.Type != "pdf" {
+	if gstr.InArray(service.AllOfficeEtx, fileType) && req.Type != "pdf" {
 		pdfPath := utils.ConvertToPDF(filePath)
 		if pdfPath == "" {
-			response.JsonExit(ctx, consts.CodeConvertToPdfFailed.Code(), consts.CodeConvertToPdfFailed.Message())
+			response.Json(ctx, consts.CodeConvertToPdfFailed, nil)
+			return res, nil
 		}
 		waterPdf := utils.WaterMark(pdfPath, req.WaterMark)
 		if waterPdf == "" {
-			response.JsonExit(ctx, consts.CodeAddWaterMarkFailed.Code(), consts.CodeAddWaterMarkFailed.Message())
+			response.Json(ctx, consts.CodeAddWaterMarkFailed, nil)
+			return res, nil
 		}
 		imgPath := utils.ConvertToImg(waterPdf)
 		if imgPath == "" {
-			response.JsonExit(ctx, consts.CodeConvertToImgFailed.Code(), consts.CodeConvertToImgFailed.Message())
+			response.Json(ctx, consts.CodeConvertToImgFailed, nil)
+			return res, nil
 		}
-		dataByte := service.OfficePage("cache/convert/" + path.Base(imgPath))
-		response.HtmlPageOK(ctx, dataByte)
-		return
+		dataByte := service.OfficePage("cache/convert/" + gfile.Basename(imgPath))
+		response.HtmlText(ctx, len(dataByte), dataByte)
+		return res, nil
 	}
+
 	// 除了PDF外的其他word文件
-	if utils.IsInArr(fileType, service.AllOfficeEtx) {
+	if gstr.InArray(service.AllOfficeEtx, fileType) {
 		pdfPath := utils.ConvertToPDF(filePath)
 		if pdfPath == "" {
-			response.JsonExit(ctx, consts.CodeConvertToPdfFailed.Code(), consts.CodeConvertToPdfFailed.Message())
+			response.Json(ctx, consts.CodeConvertToPdfFailed, nil)
+			return res, nil
 		}
 		waterPdf := utils.WaterMark(pdfPath, req.WaterMark)
 		if waterPdf == "" {
-			response.JsonExit(ctx, consts.CodeAddWaterMarkFailed.Code(), consts.CodeAddWaterMarkFailed.Message())
+			response.Json(ctx, consts.CodeAddWaterMarkFailed, nil)
 		}
-		dataByte := service.PdfPage("cache/pdf/" + path.Base(waterPdf))
-		response.HtmlPageOK(ctx, dataByte)
-		return
+		dataByte := service.PdfPage("cache/pdf/" + gfile.Basename(waterPdf))
+		response.HtmlText(ctx, len(dataByte), dataByte)
+		return res, nil
 	}
 
-	response.JsonExit(ctx, consts.CodeFileTypeNonsupportPreview.Code(), consts.CodeFileTypeNonsupportPreview.Message())
-	return
+	response.Json(ctx, consts.CodeFileTypeNonsupportPreview, nil)
+	return res, nil
 }

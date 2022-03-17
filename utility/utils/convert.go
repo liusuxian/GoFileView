@@ -1,36 +1,42 @@
 package utils
 
 import (
+	"github.com/gogf/gf/v2/os/gfile"
 	"log"
-	"os"
-	"path"
 	"runtime"
 )
 
 // ConvertToPDF 转pdf
 func ConvertToPDF(filePath string) string {
 	// 判断转换后的pdf文件是否已经存在
-	fileName := GetFilenameOnly(filePath) + ".pdf"
+	fileName := gfile.Name(filePath) + ".pdf"
 	fileOld := "cache/pdf/" + fileName
 	log.Println("ConvertToPDF filePath: ", filePath)
 	log.Println("ConvertToPDF fileOld: ", fileOld)
-	if FileExit(fileOld) {
+	if gfile.Exists(fileOld) {
 		return fileOld
 	}
 
 	commandName := ""
 	var params []string
-	if runtime.GOOS == "windows" {
+	switch runtime.GOOS {
+	case "windows":
 		commandName = "cmd"
 		params = []string{"/c", "soffice", "--headless", "--invisible", "--convert-to", "pdf", "--outdir", "cache/pdf/", filePath}
-	} else if runtime.GOOS == "linux" {
+	case "linux":
 		commandName = "libreoffice"
 		params = []string{"--invisible", "--headless", "--convert-to", "pdf", "--outdir", "cache/pdf/", filePath}
+	case "darwin":
+		commandName = "soffice"
+		params = []string{"--headless", "--invisible", "--convert-to", "pdf", "--outdir", "cache/pdf/", filePath}
+	default:
+		log.Println("ConvertToPDF Nonsupport OS: ", runtime.GOOS)
+		return ""
 	}
 
 	if _, ok := interactiveToexec(commandName, params); ok {
-		resultPath := "cache/pdf/" + GetFilenameOnly(filePath) + ".pdf"
-		if PathExists(resultPath) {
+		resultPath := "cache/pdf/" + gfile.Name(filePath) + ".pdf"
+		if gfile.Exists(resultPath) {
 			return resultPath
 		} else {
 			log.Println("ConvertToPDF resultPath NotExists: ", resultPath)
@@ -43,8 +49,8 @@ func ConvertToPDF(filePath string) string {
 
 // ConvertToImg 转图片
 func ConvertToImg(filePath string) string {
-	fileName := GetFilenameOnly(filePath)
-	fileExt := path.Ext(filePath)
+	fileName := gfile.Name(filePath)
+	fileExt := gfile.Ext(filePath)
 	log.Println("ConvertToImg filePath: ", filePath)
 	if fileExt != ".pdf" {
 		return ""
@@ -52,12 +58,13 @@ func ConvertToImg(filePath string) string {
 
 	// 判断转换后的jpg文件是否已经存在
 	fileOld := "cache/convert/" + fileName
-	if FileExit(fileOld) {
+	log.Println("ConvertToImg fileOld: ", fileOld)
+	if gfile.Exists(fileOld) {
 		return fileOld
 	}
 
-	if !PathExists("cache/convert/" + fileName) {
-		err := os.Mkdir("cache/convert/"+fileName, os.ModePerm)
+	if !gfile.Exists("cache/convert/" + fileName) {
+		err := gfile.Mkdir("cache/convert/" + fileName)
 		if err != nil {
 			log.Println("ConvertToImg 创建目录 Error: <", err.Error(), ">")
 		}
@@ -65,16 +72,24 @@ func ConvertToImg(filePath string) string {
 
 	commandName := ""
 	var params []string
-	if runtime.GOOS == "windows" {
+	switch runtime.GOOS {
+	case "windows":
 		commandName = "cmd"
 		params = []string{"/c", "magick", "convert", "-density", "130", filePath, "cache/convert/" + fileName + "/%d.jpg"}
-	} else if runtime.GOOS == "linux" {
+	case "linux":
 		commandName = "convert"
 		params = []string{"-density", "150", filePath, "cache/convert/" + fileName + "/%d.jpg"}
+	case "darwin":
+		log.Println("ConvertToImg Nonsupport OS: darwin")
+		return ""
+	default:
+		log.Println("ConvertToImg Nonsupport OS: ", runtime.GOOS)
+		return ""
 	}
+
 	if _, ok := interactiveToexec(commandName, params); ok {
-		resultPath := "cache/convert/" + GetFilenameOnly(filePath)
-		if PathExists(resultPath) {
+		resultPath := "cache/convert/" + gfile.Name(filePath)
+		if gfile.Exists(resultPath) {
 			return resultPath
 		} else {
 			log.Println("ConvertToImg resultPath NotExists: ", resultPath)
@@ -88,24 +103,28 @@ func ConvertToImg(filePath string) string {
 // MsgToPdf 只支持linux
 func MsgToPdf(filePath string) string {
 	// 判断转换后的pdf文件是否已经存在
-	fileName := GetFilenameOnly(filePath) + ".pdf"
+	fileName := gfile.Name(filePath) + ".pdf"
 	fileOld := "cache/pdf/" + fileName
 	log.Println("ConvertToPDF filePath: ", filePath)
 	log.Println("ConvertToPDF fileOld: ", fileOld)
-	if FileExit(fileOld) {
+	if gfile.Exists(fileOld) {
 		return fileOld
 	}
+
 	commandName := ""
 	var params []string
-	if runtime.GOOS == "windows" {
-		return ""
-	} else if runtime.GOOS == "linux" {
+	switch runtime.GOOS {
+	case "linux":
 		commandName = "java"
 		params = []string{"-jar", "/usr/local/emailconverter-2.5.3-all.jar", filePath, "-o ", "cache/pdf/" + fileName}
+	default:
+		log.Println("MsgToPdf Nonsupport OS: ", runtime.GOOS)
+		return ""
 	}
+
 	if _, ok := interactiveToexec(commandName, params); ok {
-		resultPath := "cache/pdf/" + GetFilenameOnly(filePath) + ".pdf"
-		if PathExists(resultPath) {
+		resultPath := "cache/pdf/" + gfile.Name(filePath) + ".pdf"
+		if gfile.Exists(resultPath) {
 			return resultPath
 		} else {
 			log.Println("MsgToPdf resultPath NotExists: ", resultPath)

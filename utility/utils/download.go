@@ -1,46 +1,52 @@
 package utils
 
 import (
-	"errors"
+	"github.com/gogf/gf/v2/crypto/gmd5"
+	"github.com/gogf/gf/v2/errors/gerror"
+	"github.com/gogf/gf/v2/os/gfile"
 	"io"
 	"log"
 	"net/http"
 	"os"
-	"path"
 	"strconv"
 )
 
 // DownloadFile 下载文件
 func DownloadFile(url string, localPath string) (string, error) {
-	var (
-		fsize   int64
-		buf     = make([]byte, 32*1024)
-		written int64
-	)
 	tmpFilePath := localPath + ".download"
 	client := new(http.Client)
-	resp, err := client.Get(url)
-
+	var resp *http.Response
+	var err error
+	resp, err = client.Get(url)
 	if err != nil {
+		log.Println("DownloadFile GetHttp Error: <", err.Error(), ">")
 		return "", err
 	}
-	fsize, err = strconv.ParseInt(resp.Header.Get("Content-Length"), 10, 32)
 
+	var fsize int64
+	fsize, err = strconv.ParseInt(resp.Header.Get("Content-Length"), 10, 32)
 	if err != nil {
-		log.Println("Error: <", err, "> when get file remote size")
+		log.Println("DownloadFile GetHeader Error: <", err.Error(), "> when get file remote size")
 		return "", err
 	}
 	if IsFileExist(localPath, fsize) {
 		return "had", nil
 	}
-	file, err := os.Create(tmpFilePath)
+
+	var file *os.File
+	file, err = gfile.Create(tmpFilePath)
 	if err != nil {
+		log.Println("DownloadFile CreateFile Error: <", err.Error(), ">")
 		return "", err
 	}
+
 	defer file.Close()
 	if resp.Body == nil {
-		return "", errors.New("body is null")
+		return "", gerror.New("DownloadFile Body Is Null")
 	}
+
+	var buf = make([]byte, 32*1024)
+	var written int64
 	defer resp.Body.Close()
 	for {
 		nr, er := resp.Body.Read(buf)
@@ -65,13 +71,27 @@ func DownloadFile(url string, localPath string) (string, error) {
 			break
 		}
 	}
+
 	if err == nil {
-		file.Close()
-		fileMd5 := GetFileMD5(tmpFilePath)
-		newPath := "cache/download/" + fileMd5 + path.Ext(localPath)
-		os.Rename(tmpFilePath, newPath)
-		log.Printf("Download file <filename:%s, md5:%s> success\n", path.Base(localPath), fileMd5)
+		_ = file.Close()
+
+		var fileMd5 string
+		fileMd5, err = gmd5.EncryptFile(tmpFilePath)
+		if err != nil {
+			log.Printf("DownloadFile GetFileMd5 <filename:%s> fail\n", gfile.Basename(localPath))
+			return "", err
+		}
+
+		newPath := "cache/download/" + fileMd5 + gfile.Ext(localPath)
+		err = gfile.Rename(tmpFilePath, newPath)
+		if err != nil {
+			log.Printf("DownloadFile FileRename <filename:%s, md5:%s> fail\n", gfile.Basename(localPath), fileMd5)
+			return "", err
+		}
+
+		log.Printf("DownloadFile <filename:%s, md5:%s> success\n", gfile.Basename(localPath), fileMd5)
 		return newPath, nil
 	}
+
 	return "", err
 }

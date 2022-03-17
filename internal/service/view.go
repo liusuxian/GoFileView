@@ -4,13 +4,12 @@ import (
 	"GoFileView/utility/logger"
 	"GoFileView/utility/utils"
 	"context"
+	"github.com/gogf/gf/v2/os/gfile"
+	"github.com/gogf/gf/v2/text/gstr"
 	"github.com/gogf/gf/v2/util/gconv"
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/russross/blackfriday"
 	"io/ioutil"
-	"os"
-	"path"
-	"strings"
 	"time"
 )
 
@@ -21,80 +20,77 @@ type NowFile struct {
 }
 
 var (
-	Pattern      string
-	Address      string
 	AllFile      map[string]*NowFile
-	ExpireTime   int64
 	AllOfficeEtx = []string{".doc", ".docx", ".xls", ".xlsx", ".csv", ".ppt", ".pptx", ".txt", ".msg"}
 	AllImageEtx  = []string{".jpg", ".png", ".gif"}
 )
 
 func OfficePage(imgPath string) []byte {
 	rd, _ := ioutil.ReadDir(imgPath)
-	dataByte, _ := ioutil.ReadFile("resource/public/html/office.html")
+	dataByte := gfile.GetBytes("resource/public/html/office.html")
 	dataStr := string(dataByte)
 	htmlCode := ""
 	for i := 0; i < len(rd); i++ {
 		htmlCode = htmlCode +
 			`<img class="my-photo" alt="loading" title="查看大图" style="cursor: pointer;"
-		 data-src="/view/office?url=` + path.Base(imgPath) + "/" + gconv.String(i) + ".jpg" +
+		 data-src="/view/office?url=` + gfile.Basename(imgPath) + "/" + gconv.String(i) + ".jpg" +
 			`" src="/static/image/loading.gif" ">`
 
 	}
-	dataStr = strings.Replace(dataStr, "{{AllImages}}", htmlCode, -1)
+	dataStr = gstr.Replace(dataStr, "{{AllImages}}", htmlCode, -1)
 	dataByte = []byte(dataStr)
 	return dataByte
 }
 
 func ImagePage(filePath string) []byte {
-	dataByte, _ := ioutil.ReadFile("resource/public/html/image.html")
+	dataByte := gfile.GetBytes("resource/public/html/image.html")
 	dataStr := string(dataByte)
-	imageUrl := "/view/img?url=" + path.Base(filePath)
+	imageUrl := "/view/img?url=" + gfile.Basename(filePath)
 	htmlCode := `<li>
 					<img id="` + imageUrl + `" url="` + imageUrl + `"
 						src="` + imageUrl + `" width="1px" height="1px">
 				 </li>`
-	dataStr = strings.Replace(dataStr, "{{AllImages}}", htmlCode, -1)
-	dataStr = strings.Replace(dataStr, "{{FirstPath}}", imageUrl, -1)
+	dataStr = gstr.Replace(dataStr, "{{AllImages}}", htmlCode, -1)
+	dataStr = gstr.Replace(dataStr, "{{FirstPath}}", imageUrl, -1)
 	dataByte = []byte(dataStr)
 	return dataByte
 }
 
 func PdfPage(filePath string) []byte {
-	dataByte, _ := ioutil.ReadFile("resource/public/html/pdf.html")
+	dataByte := gfile.GetBytes("resource/public/html/pdf.html")
 	dataStr := string(dataByte)
 
-	pdfUrl := "/view/pdf?url=" + path.Base(filePath)
-	dataStr = strings.Replace(dataStr, "{{url}}", pdfUrl, -1)
+	pdfUrl := "/view/pdf?url=" + gfile.Basename(filePath)
+	dataStr = gstr.Replace(dataStr, "{{url}}", pdfUrl, -1)
 
 	dataByte = []byte(dataStr)
 	return dataByte
 }
 
 func PdfPageDownload(filePath string) []byte {
-	dataByte, _ := ioutil.ReadFile("resource/public/html/pdf.html")
+	dataByte := gfile.GetBytes("resource/public/html/pdf.html")
 	dataStr := string(dataByte)
-	pdfUrl := "/view/img?url=" + path.Base(filePath)
-	dataStr = strings.Replace(dataStr, "{{url}}", pdfUrl, -1)
+	pdfUrl := "/view/img?url=" + gfile.Basename(filePath)
+	dataStr = gstr.Replace(dataStr, "{{url}}", pdfUrl, -1)
 	dataByte = []byte(dataStr)
 	return dataByte
 }
 
 func MdPage(filepath string) []byte {
-	Byte, _ := ioutil.ReadFile(filepath)
-	unsafe := blackfriday.MarkdownCommon(Byte)
+	fileByte := gfile.GetBytes(filepath)
+	unsafe := blackfriday.MarkdownCommon(fileByte)
 	html := bluemonday.UGCPolicy().SanitizeBytes(unsafe)
 
-	dataByte, _ := ioutil.ReadFile("resource/public/html/md.html")
+	dataByte := gfile.GetBytes("resource/public/html/md.html")
 	dataStr := string(dataByte)
 
-	dataStr = strings.Replace(dataStr, "{{url}}", string(html), -1)
+	dataStr = gstr.Replace(dataStr, "{{url}}", string(html), -1)
 	dataByte = []byte(dataStr)
 	return dataByte
 }
 
 func IsHave(fileName string) bool {
-	fileName = utils.GetFilenameOnly(fileName)
+	fileName = gfile.Name(fileName)
 	if _, ok := AllFile[fileName]; ok {
 		AllFile[fileName].LastActiveTime = time.Now().Unix()
 		return true
@@ -104,8 +100,8 @@ func IsHave(fileName string) bool {
 }
 
 func SetFileMap(fileName string) {
-	ext := path.Ext(fileName)
-	fileName = utils.GetFilenameOnly(fileName)
+	ext := gfile.Ext(fileName)
+	fileName = gfile.Name(fileName)
 	if _, ok := AllFile[fileName]; ok {
 		AllFile[fileName].LastActiveTime = time.Now().Unix()
 		return
@@ -122,35 +118,36 @@ func SetFileMap(fileName string) {
 // ClearFile 清除目录文件
 func ClearFile(ctx context.Context) {
 	logger.Info(ctx, "-------------开始清除服务器文件------------")
-	//删除图片目录里的所有文件
+	// 删除图片目录里的所有文件
 	dir1, err := ioutil.ReadDir("cache/convert")
 	if err != nil {
-		logger.Info(ctx, "CLearFIle读取目录错误:", err.Error())
+		logger.Error(ctx, "ClearFile 读取<cache/convert>目录错误: ", err.Error())
 		return
 	}
 	for _, d := range dir1 {
-		os.RemoveAll(path.Join([]string{"cache/convert", d.Name()}...))
+		_ = gfile.Remove(gfile.Join([]string{"cache/convert", d.Name()}...))
 	}
 	logger.Info(ctx, "cache/convert 已清除")
 
-	//删除本地下载文件目录里的所有文件
+	// 删除本地下载文件目录里的所有文件
 	dir2, err := ioutil.ReadDir("cache/download")
 	if err != nil {
-		logger.Info(ctx, "CLearFIle读取目录错误:", err.Error())
+		logger.Error(ctx, "ClearFile 读取<cache/download>目录错误: ", err.Error())
 		return
 	}
 	for _, d := range dir2 {
-		os.RemoveAll(path.Join([]string{"cache/download", d.Name()}...))
+		_ = gfile.Remove(gfile.Join([]string{"cache/download", d.Name()}...))
 	}
 	logger.Info(ctx, "cache/download 已清除")
-	//删除pdf目录里的所有文件
+
+	// 删除pdf目录里的所有文件
 	dir3, err := ioutil.ReadDir("cache/pdf")
 	if err != nil {
-		logger.Info(ctx, "CLearFIle读取目录错误:", err.Error())
+		logger.Error(ctx, "ClearFile 读取<cache/pdf>目录错误: ", err.Error())
 		return
 	}
 	for _, d := range dir3 {
-		os.RemoveAll(path.Join([]string{"cache/pdf", d.Name()}...))
+		_ = gfile.Remove(gfile.Join([]string{"cache/pdf", d.Name()}...))
 	}
 	logger.Info(ctx, "cache/pdf 已清除")
 	logger.Info(ctx, "---------------清除文件已完成--------------")
@@ -169,7 +166,7 @@ func GetAllFile(pathname string) ([]map[string]string, error) {
 			fullName := pathname + "/" + fi.Name()
 			tmp["path"] = fullName
 			tmp["name"] = fi.Name()
-			tmp["type"] = path.Ext(fullName)
+			tmp["type"] = gfile.Ext(fullName)
 		}
 		s = append(s, tmp)
 	}
@@ -226,10 +223,10 @@ func ExcelPage(filePath string) []byte {
 		</script><script src="/html/js/excel.header.js" type="text/javascript">
 		</script><link rel="stylesheet" href="/html/css/bootstrap.min.css">
 		`
-	dataByte, _ := ioutil.ReadFile("resource/public/html/excel.html")
+	dataByte := gfile.GetBytes("resource/public/html/excel.html")
 	dataStr := string(dataByte)
 
-	dataStr = strings.Replace(dataStr, "{{url}}", html, -1)
+	dataStr = gstr.Replace(dataStr, "{{url}}", html, -1)
 	dataByte = []byte(dataStr)
 	return dataByte
 }

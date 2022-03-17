@@ -17,26 +17,14 @@ type JsonResponse struct {
 
 // JsonOK 标准返回结果数据结构封装。
 func JsonOK(ctx context.Context, data any) {
-	Json(ctx, gcode.CodeOK.Code(), gcode.CodeOK.Message(), data)
-}
-
-// JsonExit 返回JSON数据并退出当前HTTP执行函数。
-func JsonExit(ctx context.Context, code int, message string) {
-	Json(ctx, code, message, nil)
-	//g.Throw("exit")
-}
-
-// JsonResExit 返回JSON数据并退出当前HTTP执行函数。
-func JsonResExit(ctx context.Context, code int, message string, data any) {
-	Json(ctx, code, message, data)
-	g.Throw("exit")
+	Json(ctx, gcode.CodeOK, data)
 }
 
 // Json 标准返回结果数据结构封装。
-func Json(ctx context.Context, code int, message string, data any) {
+func Json(ctx context.Context, code gcode.Code, data any) {
 	err := g.RequestFromCtx(ctx).Response.WriteJson(JsonResponse{
-		Code:    code,
-		Message: message,
+		Code:    code.Code(),
+		Message: code.Message(),
 		Data:    data,
 	})
 	if err != nil {
@@ -44,19 +32,9 @@ func Json(ctx context.Context, code int, message string, data any) {
 	}
 }
 
-// HtmlPageOK 返回 html 页面
-func HtmlPageOK(ctx context.Context, data []byte) {
-	g.RequestFromCtx(ctx).Response.Writer.Header().Set("content-length", strconv.Itoa(len(data)))
-	g.RequestFromCtx(ctx).Response.Writer.Header().Set("content-type:", "text/html;charset=UTF-8")
-	_, err := g.RequestFromCtx(ctx).Response.Writer.Write(data)
-	if err != nil {
-		logger.Error(ctx, "HtmlPageOK Error:", err.Error())
-	}
-}
-
-// HtmlPage 返回 html 页面
-func HtmlPage(ctx context.Context, codeStr string, data []byte) {
-	g.RequestFromCtx(ctx).Response.Writer.Header().Set("content-length", strconv.Itoa(len(codeStr)))
+// HtmlText 返回 HtmlText
+func HtmlText(ctx context.Context, size int, data []byte) {
+	g.RequestFromCtx(ctx).Response.Writer.Header().Set("content-length", strconv.Itoa(size))
 	g.RequestFromCtx(ctx).Response.Writer.Header().Set("content-type:", "text/html;charset=UTF-8")
 	_, err := g.RequestFromCtx(ctx).Response.Writer.Write(data)
 	if err != nil {
