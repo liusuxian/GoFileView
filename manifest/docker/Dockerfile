@@ -39,7 +39,7 @@ COPY utility/external/lib/emailconverter/linux/emailconverter-2.5.3-all.jar /usr
 RUN chmod +x /usr/local/emailconverter-2.5.3-all.jar
 
 # pdf 添加水印
-# pdfcpu 下载地址
+# pdfcpu 下载地址 https://github.com/pdfcpu/pdfcpu/releases
 COPY utility/external/lib/pdfcpu/linux/pdfcpu /usr/local/pdfcpu
 RUN chmod +x /usr/local/pdfcpu
 
