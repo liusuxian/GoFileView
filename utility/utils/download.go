@@ -1,9 +1,9 @@
 package utils
 
 import (
-	"github.com/gogf/gf/v2/crypto/gmd5"
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/os/gfile"
+	"github.com/gogf/gf/v2/text/gstr"
 	"io"
 	"log"
 	"net/http"
@@ -74,22 +74,14 @@ func DownloadFile(url string, localPath string) (string, error) {
 
 	if err == nil {
 		_ = file.Close()
-
-		var fileMd5 string
-		fileMd5, err = gmd5.EncryptFile(tmpFilePath)
-		if err != nil {
-			log.Printf("DownloadFile GetFileMd5 <filename:%s> fail\n", gfile.Basename(localPath))
-			return "", err
-		}
-
-		newPath := "cache/download/" + fileMd5 + gfile.Ext(localPath)
+		newPath := "cache/download/" + gstr.TrimAll(gfile.Name(localPath), "") + gfile.Ext(localPath)
 		err = gfile.Rename(tmpFilePath, newPath)
 		if err != nil {
-			log.Printf("DownloadFile FileRename <filename:%s, md5:%s> fail\n", gfile.Basename(localPath), fileMd5)
+			log.Printf("DownloadFile FileRename <filename:%s> fail\n", gfile.Basename(newPath))
 			return "", err
 		}
 
-		log.Printf("DownloadFile <filename:%s, md5:%s> success\n", gfile.Basename(localPath), fileMd5)
+		log.Printf("DownloadFile <filename:%s> success\n", gfile.Basename(newPath))
 		return newPath, nil
 	}
 
