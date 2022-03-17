@@ -1,6 +1,6 @@
 FROM centos:7.9.2009
 MAINTAINER liusuxian "382185882@qq.com"
-COPY fonts/* /usr/share/fonts/ChineseFonts/
+COPY utility/external/fonts/* /usr/share/fonts/ChineseFonts/
 
 ###############################################################################
 #                                INSTALLATION
@@ -35,11 +35,12 @@ RUN mkdir -p $WORKDIR/cache/local/
 RUN mkdir -p $WORKDIR/cache/pdf/
 
 # jar包，用于将.msg文件转eml文件
-COPY utility/emailconverter-2.5.3-all.jar /usr/local/emailconverter-2.5.3-all.jar
+COPY utility/external/lib/emailconverter/linux/emailconverter-2.5.3-all.jar /usr/local/emailconverter-2.5.3-all.jar
 RUN chmod +x /usr/local/emailconverter-2.5.3-all.jar
 
 # pdf 添加水印
-COPY utility/pdfcpu /usr/local/pdfcpu
+# pdfcpu 下载地址
+COPY utility/external/lib/pdfcpu/linux/pdfcpu /usr/local/pdfcpu
 RUN chmod +x /usr/local/pdfcpu
 
 # 安装wkhtmltopdf 用于将eml（html）文件转pdf

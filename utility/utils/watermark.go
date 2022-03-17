@@ -19,7 +19,8 @@ func WaterMark(pdfPath string, watermark string) string {
 	}
 
 	fileName := watermark + "_" + gfile.Name(pdfPath) + ".pdf"
-	cmdStr := "/usr/local/pdfcpu watermark add -mode text -- " + "\"" + watermark + "\"" + "  \"sc:1, rot:45, mo:2,op:.3, color:.8 .8 .4\" " + pdfPath + " cache/pdf/" + fileName
+	// cmdStr := "/usr/local/pdfcpu watermark add -mode text -- " + "\"" + watermark + "\"" + "  \"rot:45, mo:2, op:.3, color:.8 .8 .4\" " + pdfPath + " cache/pdf/" + fileName
+	cmdStr := "/usr/local/pdfcpu stamp add -mode text -- " + "\"" + watermark + "\"" + "  \"rot:45, mo:2, op:.3, color:.8 .8 .4\" " + pdfPath + " cache/pdf/" + fileName
 	if _, ok := Doexec(cmdStr); ok {
 		resultPath := "cache/pdf/" + fileName
 		if gfile.Exists(resultPath) {
