@@ -27,7 +27,7 @@ func ConvertToPDF(filePath string) string {
 		commandName = "libreoffice"
 		params = []string{"--invisible", "--headless", "--convert-to", "pdf", "--outdir", "cache/pdf/", filePath}
 	case "darwin":
-		commandName = "soffice"
+		commandName = "/Applications/LibreOffice.app/Contents/MacOS/soffice"
 		params = []string{"--headless", "--invisible", "--convert-to", "pdf", "--outdir", "cache/pdf/", filePath}
 	default:
 		log.Println("ConvertToPDF Nonsupport OS: ", runtime.GOOS)
