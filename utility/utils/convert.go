@@ -80,8 +80,8 @@ func ConvertToImg(filePath string) string {
 		commandName = "convert"
 		params = []string{"-density", "150", filePath, "cache/convert/" + fileName + "/%d.jpg"}
 	case "darwin":
-		log.Println("ConvertToImg Nonsupport OS: darwin")
-		return ""
+		commandName = "convert"
+		params = []string{"-density", "150", filePath, "cache/convert/" + fileName + "/%d.jpg"}
 	default:
 		log.Println("ConvertToImg Nonsupport OS: ", runtime.GOOS)
 		return ""

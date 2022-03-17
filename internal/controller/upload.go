@@ -6,6 +6,8 @@ import (
 	"GoFileView/utility/logger"
 	"context"
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/os/gfile"
+	"github.com/gogf/gf/v2/text/gstr"
 )
 
 var (
@@ -17,9 +19,16 @@ type cUpload struct{}
 func (c *cUpload) Upload(ctx context.Context, req *v1.UploadReq) (res *v1.UploadRes, err error) {
 	files := g.RequestFromCtx(ctx).GetUploadFile("upload-file")
 	if files != nil {
-		_, err = files.Save("cache/local")
+		var filename string
+		filename, err = files.Save("cache/local")
 		if err != nil {
-			logger.Error(ctx, "Upload Error:", err.Error())
+			logger.Error(ctx, "Upload Save Error:", err.Error())
+		}
+		oldFilename := "cache/local/" + filename
+		newFilename := "cache/local/" + gstr.TrimAll(gfile.Name(filename), "") + gfile.Ext(filename)
+		err = gfile.Rename(oldFilename, newFilename)
+		if err != nil {
+			logger.Error(ctx, "Upload Rename Error:", err.Error())
 		}
 	}
 
