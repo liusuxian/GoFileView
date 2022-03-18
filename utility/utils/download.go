@@ -30,7 +30,7 @@ func DownloadFile(url string, localPath string) (string, error) {
 		return "", err
 	}
 	if IsFileExist(localPath, fsize) {
-		return "had", nil
+		return localPath, nil
 	}
 
 	var file *os.File
