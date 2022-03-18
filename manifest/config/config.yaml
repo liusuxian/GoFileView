@@ -32,7 +32,7 @@ server:
   sessionPath: "/tmp/gsessions"                 # Session存储的文件目录路径。默认为当前系统临时目录下的gsessions目录
 
   # Logging配置
-  logPath: "./log/SystemLogs"                   # 日志文件存储目录路径，建议使用绝对路径。默认为空，表示关闭
+  logPath: "log/SystemLogs"                     # 日志文件存储目录路径，建议使用绝对路径。默认为空，表示关闭
   logStdout: true                               # 日志是否输出到终端。默认为true
   errorStack: true                              # 当Server捕获到异常时是否记录堆栈信息到日志中。默认为true
   errorLogEnabled: true                         # 是否记录异常日志信息到日志中。默认为true
@@ -53,9 +53,20 @@ server:
   graceful: false                               # 是否开启平滑重启特性，开启时将会在本地增加10000的本地TCP端口用于进程间通信。默认false
   gracefulTimeout: 2                            # 父进程在平滑重启后多少秒退出，默认2秒。若请求耗时大于该值，可能会导致请求中断
 
+# 数据库连接配置
+database:
+  logger:
+    path: "log/sql"
+    level: "all"
+    stdout: true
+    ctxKeys: [ "RequestId" ]
+  default:
+    link: "mysql:root:Lsx19890329!@#$%@tcp(127.0.0.1:3306)/lczx"
+    debug: true
+
 logger:
   access:
-    path: "./log/GoFileView"                    # 日志文件路径。默认为空，表示关闭，仅输出到终端
+    path: "log/GoFileView"                      # 日志文件路径。默认为空，表示关闭，仅输出到终端
     file: "access-{Y-m-d}.log"                  # 日志文件格式。默认为"{Y-m-d}.log"
     prefix: ""                                  # 日志内容输出前缀。默认为空
     level: "all"                                # 日志输出级别
@@ -71,7 +82,7 @@ logger:
     stdoutColorDisabled: false                  # 关闭终端的颜色打印。默认开启
     writerColorEnable: false                    # 日志文件是否带上颜色。默认false，表示不带颜色
   error:
-    path: "./log/GoFileView"                    # 日志文件路径。默认为空，表示关闭，仅输出到终端
+    path: "log/GoFileView"                      # 日志文件路径。默认为空，表示关闭，仅输出到终端
     file: "error-{Y-m-d}.log"                   # 日志文件格式。默认为"{Y-m-d}.log"
     prefix: ""                                  # 日志内容输出前缀。默认为空
     level: "all"                                # 日志输出级别
