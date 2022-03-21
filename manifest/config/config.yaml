@@ -53,24 +53,13 @@ server:
   graceful: false                               # 是否开启平滑重启特性，开启时将会在本地增加10000的本地TCP端口用于进程间通信。默认false
   gracefulTimeout: 2                            # 父进程在平滑重启后多少秒退出，默认2秒。若请求耗时大于该值，可能会导致请求中断
 
-# 数据库连接配置
-database:
-  logger:
-    path: "log/sql"
-    level: "all"
-    stdout: true
-    ctxKeys: [ "RequestId" ]
-  default:
-    link: "mysql:root:Lsx19890329!@#$%@tcp(127.0.0.1:3306)/lczx"
-    debug: true
-
 logger:
   access:
     path: "log/GoFileView"                      # 日志文件路径。默认为空，表示关闭，仅输出到终端
     file: "access-{Y-m-d}.log"                  # 日志文件格式。默认为"{Y-m-d}.log"
     prefix: ""                                  # 日志内容输出前缀。默认为空
     level: "all"                                # 日志输出级别
-    ctxKeys: [ "Trace-Id" ]                     # 自定义Context上下文变量名称，自动打印Context的变量到日志中。默认为空
+    ctxKeys: [ "RequestId" ]                    # 自定义Context上下文变量名称，自动打印Context的变量到日志中。默认为空
     header: true                                # 是否打印日志的头信息。默认true
     stdout: true                                # 日志是否同时输出到终端。默认true
     rotateSize: "100M"                          # 按照日志文件大小对文件进行滚动切分。默认为0，表示关闭滚动切分特性
@@ -86,7 +75,7 @@ logger:
     file: "error-{Y-m-d}.log"                   # 日志文件格式。默认为"{Y-m-d}.log"
     prefix: ""                                  # 日志内容输出前缀。默认为空
     level: "all"                                # 日志输出级别
-    ctxKeys: [ "Trace-Id" ]                     # 自定义Context上下文变量名称，自动打印Context的变量到日志中。默认为空
+    ctxKeys: [ "RequestId" ]                    # 自定义Context上下文变量名称，自动打印Context的变量到日志中。默认为空
     header: true                                # 是否打印日志的头信息。默认true
     stdout: true                                # 日志是否同时输出到终端。默认true
     rotateSize: "100M"                          # 按照日志文件大小对文件进行滚动切分。默认为0，表示关闭滚动切分特性
