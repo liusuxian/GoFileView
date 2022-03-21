@@ -87,7 +87,6 @@ docker创建镜像：docker build -t <name>:<tag> <Dockerfile文件所在目录>
 wget -O gf https://github.com/gogf/gf/releases/latest/download/gf_$(go env GOOS)_$(go env GOARCH) && chmod +x gf && ./gf install -y && rm ./gf
 gf创建项目：
 gf init projectName
-go clean -modcache
 rm go.sum
 go mod tidy
 gf编译：gf build -o main
