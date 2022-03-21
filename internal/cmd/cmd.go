@@ -20,29 +20,36 @@ var (
 		Func: func(ctx context.Context, parser *gcmd.Parser) (err error) {
 			s := g.Server()
 			// 获取静态文件路径配置
-			serverRoot := g.Cfg().MustGet(ctx, "server.serverRoot", "resource/public").String()
+			serverRoot := g.Cfg().MustGet(ctx, "server.serverRoot").String()
 			// 设置静态文件目录
 			s.AddStaticPath("/static", serverRoot+"/resource")
-
+			// 不认证接口
 			s.Group("/", func(group *ghttp.RouterGroup) {
 				group.Middleware(
 					service.Middleware().Ctx,
 					service.Middleware().CORS,
 					ghttp.MiddlewareHandlerResponse,
 				)
+				// 调试路由
 				group.Bind(
 					controller.Hello,
 				)
-				group.Group("/view", func(group *ghttp.RouterGroup) {
-					group.Bind(
-						controller.View,
-						controller.Img,
-						controller.Pdf,
-						controller.Office,
-						controller.Upload,
-						controller.Delete,
-					)
-				})
+			})
+			// 不认证接口
+			s.Group("/view", func(group *ghttp.RouterGroup) {
+				group.Middleware(
+					service.Middleware().Ctx,
+					service.Middleware().CORS,
+					ghttp.MiddlewareHandlerResponse,
+				)
+				group.Bind(
+					controller.View,
+					controller.Img,
+					controller.Pdf,
+					controller.Office,
+					controller.Upload,
+					controller.Delete,
+				)
 			})
 			// 每天凌晨两点清理服务器文件
 			_, err = gcron.Add(ctx, "0 0 2 * * *", service.ClearFile)
@@ -52,7 +59,7 @@ var (
 			}
 			// 打印出当前资源管理器中所有的文件列表
 			gres.Dump()
-
+			// 启动
 			s.Run()
 			return nil
 		},
