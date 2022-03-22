@@ -8,8 +8,11 @@ import (
 	"GoFileView/utility/response"
 	"GoFileView/utility/utils"
 	"context"
+	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gfile"
 	"github.com/gogf/gf/v2/text/gstr"
+	"io/ioutil"
+	"strconv"
 )
 
 // 本地文件路径
@@ -130,5 +133,100 @@ func (c *cView) View(ctx context.Context, req *v1.ViewReq) (res *v1.ViewRes, err
 	}
 
 	response.Json(ctx, consts.CodeFileTypeNonsupportPreview, nil)
+	return res, nil
+}
+
+func (c *cView) Delete(ctx context.Context, req *v1.DeleteReq) (res *v1.DeleteRes, err error) {
+	if gfile.Exists(req.Url) {
+		err = gfile.Remove(req.Url)
+		if err != nil {
+			logger.Error(ctx, "Delete Error: ", err.Error())
+		}
+	}
+
+	allFile, _ := service.GetAllFile("cache/local")
+	view := g.RequestFromCtx(ctx).GetView()
+	view.Assign("AllFile", allFile)
+	err = g.RequestFromCtx(ctx).Response.WriteTpl("resource/template/index/index.html")
+	if err != nil {
+		logger.Error(ctx, "Delete Error:", err.Error())
+	}
+
+	return res, nil
+}
+
+func (c *cView) Upload(ctx context.Context, req *v1.UploadReq) (res *v1.UploadRes, err error) {
+	files := g.RequestFromCtx(ctx).GetUploadFiles("upload-file")
+	if files != nil {
+		var filenames []string
+		filenames, err = files.Save("cache/local")
+		if err != nil {
+			logger.Error(ctx, "Upload Save Error:", err.Error())
+		}
+
+		for _, filename := range filenames {
+			oldFilename := "cache/local/" + filename
+			newFilename := "cache/local/" + gstr.TrimAll(gfile.Name(filename), "") + gfile.Ext(filename)
+			err = gfile.Rename(oldFilename, newFilename)
+			if err != nil {
+				logger.Error(ctx, "Upload Rename Error:", err.Error())
+			}
+		}
+	}
+
+	allFile, _ := service.GetAllFile("cache/local")
+	view := g.RequestFromCtx(ctx).GetView()
+	view.Assign("AllFile", allFile)
+	err = g.RequestFromCtx(ctx).Response.WriteTpl("resource/template/index/index.html")
+	if err != nil {
+		logger.Error(ctx, "Upload Error:", err.Error())
+	}
+	return res, nil
+}
+
+func (c *cView) Img(ctx context.Context, req *v1.ImgReq) (res *v1.ImgRes, err error) {
+	logger.Info(ctx, "Img req：", req)
+	var dataByte []byte
+	dataByte, err = ioutil.ReadFile("cache/download/" + req.Url)
+	if err != nil {
+		// 如果是本地预览，则文件在local目录下
+		dataByte, err = ioutil.ReadFile("cache/local/" + req.Url)
+		if err != nil {
+			response.HtmlText(ctx, len("404"), []byte("出现了一些问题,导致File View无法获取您的数据!"))
+			return res, nil
+		}
+	}
+
+	response.HtmlText(ctx, len(dataByte), dataByte)
+	return res, nil
+}
+
+func (c *cView) Office(ctx context.Context, req *v1.OfficeReq) (res *v1.OfficeRes, err error) {
+	logger.Info(ctx, "Office req：", req)
+	var dataByte []byte
+	dataByte, err = ioutil.ReadFile("cache/convert/" + req.Url)
+	if err != nil {
+		response.HtmlText(ctx, len("404"), []byte("出现了一些问题,导致File View无法获取您的数据!"))
+		return res, nil
+	}
+
+	response.HtmlText(ctx, len(dataByte), dataByte)
+	return res, nil
+}
+
+func (c *cView) Pdf(ctx context.Context, req *v1.PdfReq) (res *v1.PdfRes, err error) {
+	logger.Info(ctx, "Pdf req：", req)
+	var dataByte []byte
+	dataByte, err = ioutil.ReadFile("cache/pdf/" + req.Url)
+	if err != nil {
+		response.HtmlText(ctx, len("404"), []byte("出现了一些问题,导致File View无法获取您的数据!"))
+		return res, nil
+	}
+
+	g.RequestFromCtx(ctx).Response.Writer.Header().Set("content-length", strconv.Itoa(len(dataByte)))
+	_, err = g.RequestFromCtx(ctx).Response.Writer.Write(dataByte)
+	if err != nil {
+		logger.Error(ctx, "Pdf Error:", err.Error())
+	}
 	return res, nil
 }
