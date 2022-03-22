@@ -1,16 +1,16 @@
 package utils
 
 import (
+	"context"
 	"github.com/gogf/gf/v2/frame/g"
-	"github.com/gogf/gf/v2/os/gctx"
 	"github.com/gogf/gf/v2/os/gfile"
 	"log"
 )
 
 // WaterMark pdf增加水印
-func WaterMark(pdfPath string, watermark string) string {
+func WaterMark(ctx context.Context, pdfPath string, watermark string) string {
 	if watermark == "" {
-		watermarkVar, err := g.Cfg().Get(gctx.New(), "WaterMark.default", "liusuxian")
+		watermarkVar, err := g.Cfg().Get(ctx, "WaterMark.default", "liusuxian")
 		if err != nil {
 			log.Println("WaterMark 获取水印配置 Error: <", err.Error(), ">")
 			return ""

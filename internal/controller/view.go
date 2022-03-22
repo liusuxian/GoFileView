@@ -53,7 +53,7 @@ func (c *cView) View(ctx context.Context, req *v1.ViewReq) (res *v1.ViewRes, err
 			response.Json(ctx, consts.CodeConvertToPdfFailed, nil)
 			return res, nil
 		}
-		waterPdf := utils.WaterMark(pdfPath, req.WaterMark)
+		waterPdf := utils.WaterMark(ctx, pdfPath, req.WaterMark)
 		if waterPdf == "" {
 			response.Json(ctx, consts.CodeAddWaterMarkFailed, nil)
 			return res, nil
@@ -66,7 +66,7 @@ func (c *cView) View(ctx context.Context, req *v1.ViewReq) (res *v1.ViewRes, err
 
 	// 后缀是pdf直接读取文件类容返回
 	if fileType == ".pdf" {
-		waterPdf := utils.WaterMark(filePath, req.WaterMark)
+		waterPdf := utils.WaterMark(ctx, filePath, req.WaterMark)
 		if waterPdf == "" {
 			response.Json(ctx, consts.CodeAddWaterMarkFailed, nil)
 			return res, nil
@@ -98,7 +98,7 @@ func (c *cView) View(ctx context.Context, req *v1.ViewReq) (res *v1.ViewRes, err
 			response.Json(ctx, consts.CodeConvertToPdfFailed, nil)
 			return res, nil
 		}
-		waterPdf := utils.WaterMark(pdfPath, req.WaterMark)
+		waterPdf := utils.WaterMark(ctx, pdfPath, req.WaterMark)
 		if waterPdf == "" {
 			response.Json(ctx, consts.CodeAddWaterMarkFailed, nil)
 			return res, nil
@@ -120,7 +120,7 @@ func (c *cView) View(ctx context.Context, req *v1.ViewReq) (res *v1.ViewRes, err
 			response.Json(ctx, consts.CodeConvertToPdfFailed, nil)
 			return res, nil
 		}
-		waterPdf := utils.WaterMark(pdfPath, req.WaterMark)
+		waterPdf := utils.WaterMark(ctx, pdfPath, req.WaterMark)
 		if waterPdf == "" {
 			response.Json(ctx, consts.CodeAddWaterMarkFailed, nil)
 		}
