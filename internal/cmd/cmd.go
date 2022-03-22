@@ -24,18 +24,6 @@ var (
 			// 设置静态文件目录
 			s.AddStaticPath("/static", serverRoot+"/resource")
 			// 不认证接口
-			s.Group("/", func(group *ghttp.RouterGroup) {
-				group.Middleware(
-					service.Middleware().Ctx,
-					service.Middleware().CORS,
-					ghttp.MiddlewareHandlerResponse,
-				)
-				// 调试路由
-				group.Bind(
-					controller.Hello,
-				)
-			})
-			// 不认证接口
 			s.Group("/view", func(group *ghttp.RouterGroup) {
 				group.Middleware(
 					service.Middleware().Ctx,
