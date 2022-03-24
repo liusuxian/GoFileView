@@ -35,7 +35,7 @@ func (c *cView) View(ctx context.Context, req *v1.ViewReq) (res *v1.ViewRes, err
 		var file string
 		file, err = utils.DownloadFile(req.Url, "cache/download/"+gfile.Basename(req.Url))
 		if err != nil {
-			err = gerror.NewCode(code.DownloadFailed, err.Error())
+			err = gerror.WrapCode(code.DownloadFailed, err)
 			return
 		}
 		filePath = file
@@ -54,13 +54,13 @@ func (c *cView) View(ctx context.Context, req *v1.ViewReq) (res *v1.ViewRes, err
 		var pdfPath string
 		pdfPath, err = utils.MsgToPdf(filePath)
 		if err != nil {
-			err = gerror.NewCode(code.ConvertToPdfFailed, err.Error())
+			err = gerror.WrapCode(code.ConvertToPdfFailed, err)
 			return
 		}
 		var waterPdf string
 		waterPdf, err = utils.WaterMark(ctx, pdfPath, req.WaterMark)
 		if err != nil {
-			err = gerror.NewCode(code.AddWaterMarkFailed, err.Error())
+			err = gerror.WrapCode(code.AddWaterMarkFailed, err)
 			return
 		}
 
@@ -74,7 +74,7 @@ func (c *cView) View(ctx context.Context, req *v1.ViewReq) (res *v1.ViewRes, err
 		var waterPdf string
 		waterPdf, err = utils.WaterMark(ctx, filePath, req.WaterMark)
 		if err != nil {
-			err = gerror.NewCode(code.AddWaterMarkFailed, err.Error())
+			err = gerror.WrapCode(code.AddWaterMarkFailed, err)
 			return
 		}
 		dataByte := service.PdfPage("cache/pdf/" + gfile.Basename(waterPdf))
@@ -101,19 +101,19 @@ func (c *cView) View(ctx context.Context, req *v1.ViewReq) (res *v1.ViewRes, err
 		var pdfPath string
 		pdfPath, err = utils.ConvertToPDF(filePath)
 		if err != nil {
-			err = gerror.NewCode(code.ConvertToPdfFailed, err.Error())
+			err = gerror.WrapCode(code.ConvertToPdfFailed, err)
 			return
 		}
 		var waterPdf string
 		waterPdf, err = utils.WaterMark(ctx, pdfPath, req.WaterMark)
 		if err != nil {
-			err = gerror.NewCode(code.AddWaterMarkFailed, err.Error())
+			err = gerror.WrapCode(code.AddWaterMarkFailed, err)
 			return
 		}
 		var imgPath string
 		imgPath, err = utils.ConvertToImg(waterPdf)
 		if err != nil {
-			err = gerror.NewCode(code.ConvertToImgFailed, err.Error())
+			err = gerror.WrapCode(code.ConvertToImgFailed, err)
 			return
 		}
 		dataByte := service.OfficePage("cache/convert/" + gfile.Basename(imgPath))
@@ -126,13 +126,13 @@ func (c *cView) View(ctx context.Context, req *v1.ViewReq) (res *v1.ViewRes, err
 		var pdfPath string
 		pdfPath, err = utils.ConvertToPDF(filePath)
 		if err != nil {
-			err = gerror.NewCode(code.ConvertToPdfFailed, err.Error())
+			err = gerror.WrapCode(code.ConvertToPdfFailed, err)
 			return
 		}
 		var waterPdf string
 		waterPdf, err = utils.WaterMark(ctx, pdfPath, req.WaterMark)
 		if err != nil {
-			err = gerror.NewCode(code.AddWaterMarkFailed, err.Error())
+			err = gerror.WrapCode(code.AddWaterMarkFailed, err)
 			return
 		}
 		dataByte := service.PdfPage("cache/pdf/" + gfile.Basename(waterPdf))
@@ -140,7 +140,7 @@ func (c *cView) View(ctx context.Context, req *v1.ViewReq) (res *v1.ViewRes, err
 		return
 	}
 
-	err = gerror.NewCodef(code.FileTypeNonsupportPreview, "不支持 %s 类型文件", fileType)
+	err = gerror.WrapCode(code.FileTypeNonsupportPreview, gerror.Newf("%s", fileType))
 	return
 }
 
