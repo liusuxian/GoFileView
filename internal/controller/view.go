@@ -2,12 +2,13 @@ package controller
 
 import (
 	v1 "GoFileView/api/v1"
-	"GoFileView/internal/consts"
+	"GoFileView/internal/code"
 	"GoFileView/internal/service"
 	"GoFileView/utility/logger"
 	"GoFileView/utility/response"
 	"GoFileView/utility/utils"
 	"context"
+	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gfile"
 	"github.com/gogf/gf/v2/text/gstr"
@@ -34,8 +35,7 @@ func (c *cView) View(ctx context.Context, req *v1.ViewReq) (res *v1.ViewRes, err
 		var file string
 		file, err = utils.DownloadFile(req.Url, "cache/download/"+gfile.Basename(req.Url))
 		if err != nil {
-			logger.Info(ctx, "下载文件出错: ", err.Error())
-			response.Json(ctx, consts.CodeDownloadFailed, nil)
+			err = gerror.NewCode(code.DownloadFailed, err.Error())
 			return
 		}
 		filePath = file
@@ -51,14 +51,16 @@ func (c *cView) View(ctx context.Context, req *v1.ViewReq) (res *v1.ViewRes, err
 
 	// msg 或者 eml 文件预览
 	if fileType == ".msg" || fileType == ".eml" {
-		pdfPath := utils.MsgToPdf(filePath)
-		if pdfPath == "" {
-			response.Json(ctx, consts.CodeConvertToPdfFailed, nil)
+		var pdfPath string
+		pdfPath, err = utils.MsgToPdf(filePath)
+		if err != nil {
+			err = gerror.NewCode(code.ConvertToPdfFailed, err.Error())
 			return
 		}
-		waterPdf := utils.WaterMark(ctx, pdfPath, req.WaterMark)
-		if waterPdf == "" {
-			response.Json(ctx, consts.CodeAddWaterMarkFailed, nil)
+		var waterPdf string
+		waterPdf, err = utils.WaterMark(ctx, pdfPath, req.WaterMark)
+		if err != nil {
+			err = gerror.NewCode(code.AddWaterMarkFailed, err.Error())
 			return
 		}
 
@@ -69,12 +71,12 @@ func (c *cView) View(ctx context.Context, req *v1.ViewReq) (res *v1.ViewRes, err
 
 	// 后缀是pdf直接读取文件类容返回
 	if fileType == ".pdf" {
-		waterPdf := utils.WaterMark(ctx, filePath, req.WaterMark)
-		if waterPdf == "" {
-			response.Json(ctx, consts.CodeAddWaterMarkFailed, nil)
+		var waterPdf string
+		waterPdf, err = utils.WaterMark(ctx, filePath, req.WaterMark)
+		if err != nil {
+			err = gerror.NewCode(code.AddWaterMarkFailed, err.Error())
 			return
 		}
-		logger.Info(ctx, "waterPdf: ", waterPdf)
 		dataByte := service.PdfPage("cache/pdf/" + gfile.Basename(waterPdf))
 		response.HtmlText(ctx, len(dataByte), dataByte)
 		return
@@ -96,19 +98,22 @@ func (c *cView) View(ctx context.Context, req *v1.ViewReq) (res *v1.ViewRes, err
 
 	// 除了PDF外的其他word文件  (如果没有安装ImageMagick，可以将这个分支去掉)
 	if gstr.InArray(service.AllOfficeEtx, fileType) && req.Type != "pdf" {
-		pdfPath := utils.ConvertToPDF(filePath)
-		if pdfPath == "" {
-			response.Json(ctx, consts.CodeConvertToPdfFailed, nil)
+		var pdfPath string
+		pdfPath, err = utils.ConvertToPDF(filePath)
+		if err != nil {
+			err = gerror.NewCode(code.ConvertToPdfFailed, err.Error())
 			return
 		}
-		waterPdf := utils.WaterMark(ctx, pdfPath, req.WaterMark)
-		if waterPdf == "" {
-			response.Json(ctx, consts.CodeAddWaterMarkFailed, nil)
+		var waterPdf string
+		waterPdf, err = utils.WaterMark(ctx, pdfPath, req.WaterMark)
+		if err != nil {
+			err = gerror.NewCode(code.AddWaterMarkFailed, err.Error())
 			return
 		}
-		imgPath := utils.ConvertToImg(waterPdf)
-		if imgPath == "" {
-			response.Json(ctx, consts.CodeConvertToImgFailed, nil)
+		var imgPath string
+		imgPath, err = utils.ConvertToImg(waterPdf)
+		if err != nil {
+			err = gerror.NewCode(code.ConvertToImgFailed, err.Error())
 			return
 		}
 		dataByte := service.OfficePage("cache/convert/" + gfile.Basename(imgPath))
@@ -118,21 +123,24 @@ func (c *cView) View(ctx context.Context, req *v1.ViewReq) (res *v1.ViewRes, err
 
 	// 除了PDF外的其他word文件
 	if gstr.InArray(service.AllOfficeEtx, fileType) {
-		pdfPath := utils.ConvertToPDF(filePath)
-		if pdfPath == "" {
-			response.Json(ctx, consts.CodeConvertToPdfFailed, nil)
+		var pdfPath string
+		pdfPath, err = utils.ConvertToPDF(filePath)
+		if err != nil {
+			err = gerror.NewCode(code.ConvertToPdfFailed, err.Error())
 			return
 		}
-		waterPdf := utils.WaterMark(ctx, pdfPath, req.WaterMark)
-		if waterPdf == "" {
-			response.Json(ctx, consts.CodeAddWaterMarkFailed, nil)
+		var waterPdf string
+		waterPdf, err = utils.WaterMark(ctx, pdfPath, req.WaterMark)
+		if err != nil {
+			err = gerror.NewCode(code.AddWaterMarkFailed, err.Error())
+			return
 		}
 		dataByte := service.PdfPage("cache/pdf/" + gfile.Basename(waterPdf))
 		response.HtmlText(ctx, len(dataByte), dataByte)
 		return
 	}
 
-	response.Json(ctx, consts.CodeFileTypeNonsupportPreview, nil)
+	err = gerror.NewCodef(code.FileTypeNonsupportPreview, "不支持 %s 类型文件", fileType)
 	return
 }
 
@@ -140,7 +148,7 @@ func (c *cView) Delete(ctx context.Context, req *v1.DeleteReq) (res *v1.DeleteRe
 	if gfile.Exists(req.Url) {
 		err = gfile.Remove(req.Url)
 		if err != nil {
-			logger.Error(ctx, "Delete Error: ", err.Error())
+			return
 		}
 	}
 
@@ -148,10 +156,6 @@ func (c *cView) Delete(ctx context.Context, req *v1.DeleteReq) (res *v1.DeleteRe
 	view := g.RequestFromCtx(ctx).GetView()
 	view.Assign("AllFile", allFile)
 	err = g.RequestFromCtx(ctx).Response.WriteTpl("resource/template/index/index.html")
-	if err != nil {
-		logger.Error(ctx, "Delete Error:", err.Error())
-	}
-
 	return
 }
 
@@ -161,7 +165,7 @@ func (c *cView) Upload(ctx context.Context, req *v1.UploadReq) (res *v1.UploadRe
 		var filenames []string
 		filenames, err = files.Save("cache/local")
 		if err != nil {
-			logger.Error(ctx, "Upload Save Error:", err.Error())
+			return
 		}
 
 		for _, filename := range filenames {
@@ -169,7 +173,7 @@ func (c *cView) Upload(ctx context.Context, req *v1.UploadReq) (res *v1.UploadRe
 			newFilename := "cache/local/" + gstr.TrimAll(gfile.Name(filename), "") + gfile.Ext(filename)
 			err = gfile.Rename(oldFilename, newFilename)
 			if err != nil {
-				logger.Error(ctx, "Upload Rename Error:", err.Error())
+				return
 			}
 		}
 	}
@@ -178,9 +182,6 @@ func (c *cView) Upload(ctx context.Context, req *v1.UploadReq) (res *v1.UploadRe
 	view := g.RequestFromCtx(ctx).GetView()
 	view.Assign("AllFile", allFile)
 	err = g.RequestFromCtx(ctx).Response.WriteTpl("resource/template/index/index.html")
-	if err != nil {
-		logger.Error(ctx, "Upload Error:", err.Error())
-	}
 	return
 }
 
@@ -225,8 +226,5 @@ func (c *cView) Pdf(ctx context.Context, req *v1.PdfReq) (res *v1.PdfRes, err er
 
 	g.RequestFromCtx(ctx).Response.Writer.Header().Set("content-length", strconv.Itoa(len(dataByte)))
 	_, err = g.RequestFromCtx(ctx).Response.Writer.Write(dataByte)
-	if err != nil {
-		logger.Error(ctx, "Pdf Error:", err.Error())
-	}
 	return
 }

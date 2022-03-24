@@ -1,20 +1,18 @@
 package utils
 
 import (
+	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/os/gfile"
-	"log"
 	"runtime"
 )
 
 // ConvertToPDF 转pdf
-func ConvertToPDF(filePath string) string {
+func ConvertToPDF(filePath string) (string, error) {
 	// 判断转换后的pdf文件是否已经存在
 	fileName := gfile.Name(filePath) + ".pdf"
 	fileOld := "cache/pdf/" + fileName
-	log.Println("ConvertToPDF filePath: ", filePath)
-	log.Println("ConvertToPDF fileOld: ", fileOld)
 	if gfile.Exists(fileOld) {
-		return fileOld
+		return fileOld, nil
 	}
 
 	commandName := ""
@@ -30,43 +28,39 @@ func ConvertToPDF(filePath string) string {
 		commandName = "/Applications/LibreOffice.app/Contents/MacOS/soffice"
 		params = []string{"--headless", "--invisible", "--convert-to", "pdf", "--outdir", "cache/pdf/", filePath}
 	default:
-		log.Println("ConvertToPDF Nonsupport OS: ", runtime.GOOS)
-		return ""
+		return "", gerror.Newf("ConvertToPDF Nonsupport OS: %s", runtime.GOOS)
 	}
 
-	if _, ok := interactiveToexec(commandName, params); ok {
-		resultPath := "cache/pdf/" + gfile.Name(filePath) + ".pdf"
-		if gfile.Exists(resultPath) {
-			return resultPath
-		} else {
-			log.Println("ConvertToPDF resultPath NotExists: ", resultPath)
-			return ""
-		}
+	err := interactiveToexec(commandName, params)
+	if err != nil {
+		return "", err
+	}
+	resultPath := "cache/pdf/" + gfile.Name(filePath) + ".pdf"
+	if gfile.Exists(resultPath) {
+		return resultPath, nil
 	} else {
-		return ""
+		return "", gerror.Newf("ConvertToPDF resultPath NotExists: : %s", resultPath)
 	}
 }
 
 // ConvertToImg 转图片
-func ConvertToImg(filePath string) string {
+func ConvertToImg(filePath string) (string, error) {
 	fileName := gfile.Name(filePath)
 	fileExt := gfile.Ext(filePath)
-	log.Println("ConvertToImg filePath: ", filePath)
 	if fileExt != ".pdf" {
-		return ""
+		return "", gerror.Newf("ConvertToImg Nonsupport FileType: %s", fileExt)
 	}
 
 	// 判断转换后的jpg文件是否已经存在
 	fileOld := "cache/convert/" + fileName
-	log.Println("ConvertToImg fileOld: ", fileOld)
 	if gfile.Exists(fileOld) {
-		return fileOld
+		return fileOld, nil
 	}
 
 	if !gfile.Exists("cache/convert/" + fileName) {
 		err := gfile.Mkdir("cache/convert/" + fileName)
 		if err != nil {
-			log.Println("ConvertToImg 创建目录 Error: <", err.Error(), ">")
+			return "", err
 		}
 	}
 
@@ -83,32 +77,28 @@ func ConvertToImg(filePath string) string {
 		commandName = "convert"
 		params = []string{"-density", "150", filePath, "cache/convert/" + fileName + "/%d.jpg"}
 	default:
-		log.Println("ConvertToImg Nonsupport OS: ", runtime.GOOS)
-		return ""
+		return "", gerror.Newf("ConvertToImg Nonsupport OS: %s", runtime.GOOS)
 	}
 
-	if _, ok := interactiveToexec(commandName, params); ok {
-		resultPath := "cache/convert/" + gfile.Name(filePath)
-		if gfile.Exists(resultPath) {
-			return resultPath
-		} else {
-			log.Println("ConvertToImg resultPath NotExists: ", resultPath)
-			return ""
-		}
+	err := interactiveToexec(commandName, params)
+	if err != nil {
+		return "", err
+	}
+	resultPath := "cache/convert/" + gfile.Name(filePath)
+	if gfile.Exists(resultPath) {
+		return resultPath, nil
 	} else {
-		return ""
+		return "", gerror.Newf("ConvertToImg resultPath NotExists: : %s", resultPath)
 	}
 }
 
 // MsgToPdf 只支持linux
-func MsgToPdf(filePath string) string {
+func MsgToPdf(filePath string) (string, error) {
 	// 判断转换后的pdf文件是否已经存在
 	fileName := gfile.Name(filePath) + ".pdf"
 	fileOld := "cache/pdf/" + fileName
-	log.Println("ConvertToPDF filePath: ", filePath)
-	log.Println("ConvertToPDF fileOld: ", fileOld)
 	if gfile.Exists(fileOld) {
-		return fileOld
+		return fileOld, nil
 	}
 
 	commandName := ""
@@ -118,19 +108,17 @@ func MsgToPdf(filePath string) string {
 		commandName = "java"
 		params = []string{"-jar", "/usr/local/emailconverter-2.5.3-all.jar", filePath, "-o ", "cache/pdf/" + fileName}
 	default:
-		log.Println("MsgToPdf Nonsupport OS: ", runtime.GOOS)
-		return ""
+		return "", gerror.Newf("MsgToPdf Nonsupport OS: %s", runtime.GOOS)
 	}
 
-	if _, ok := interactiveToexec(commandName, params); ok {
-		resultPath := "cache/pdf/" + gfile.Name(filePath) + ".pdf"
-		if gfile.Exists(resultPath) {
-			return resultPath
-		} else {
-			log.Println("MsgToPdf resultPath NotExists: ", resultPath)
-			return ""
-		}
+	err := interactiveToexec(commandName, params)
+	if err != nil {
+		return "", err
+	}
+	resultPath := "cache/pdf/" + gfile.Name(filePath) + ".pdf"
+	if gfile.Exists(resultPath) {
+		return resultPath, nil
 	} else {
-		return ""
+		return "", gerror.Newf("MsgToPdf resultPath NotExists: : %s", resultPath)
 	}
 }

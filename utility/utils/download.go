@@ -19,14 +19,12 @@ func DownloadFile(url string, localPath string) (string, error) {
 	var err error
 	resp, err = client.Get(url)
 	if err != nil {
-		log.Println("DownloadFile GetHttp Error: <", err.Error(), ">")
 		return "", err
 	}
 
 	var fsize int64
 	fsize, err = strconv.ParseInt(resp.Header.Get("Content-Length"), 10, 32)
 	if err != nil {
-		log.Println("DownloadFile GetHeader Error: <", err.Error(), "> when get file remote size")
 		return "", err
 	}
 	if IsFileExist(localPath, fsize) {
@@ -36,7 +34,6 @@ func DownloadFile(url string, localPath string) (string, error) {
 	var file *os.File
 	file, err = gfile.Create(tmpFilePath)
 	if err != nil {
-		log.Println("DownloadFile CreateFile Error: <", err.Error(), ">")
 		return "", err
 	}
 
@@ -77,7 +74,6 @@ func DownloadFile(url string, localPath string) (string, error) {
 		newPath := "cache/download/" + gstr.TrimAll(gfile.Name(localPath), "") + gfile.Ext(localPath)
 		err = gfile.Rename(tmpFilePath, newPath)
 		if err != nil {
-			log.Printf("DownloadFile FileRename <filename:%s> fail\n", gfile.Basename(newPath))
 			return "", err
 		}
 

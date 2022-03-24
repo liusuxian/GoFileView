@@ -3,7 +3,7 @@ package v1
 import "github.com/gogf/gf/v2/frame/g"
 
 type ViewReq struct {
-	g.Meta    `path:"/view" tags:"view" method:"get" summary:"You first view api"`
+	g.Meta    `path:"/view" tags:"view" method:"get" summary:"You first /view/view api"`
 	Url       string `json:"url" dc:"文件url地址"`
 	Type      string `json:"type" dc:"判断是图片展示，还是pdf展示"` // 判断是图片展示，还是pdf展示
 	FileWay   string `json:"fileWay" dc:"判断是否是本地文件"`    // 判断是否是本地文件
@@ -14,14 +14,14 @@ type ViewRes struct {
 }
 
 type UploadReq struct {
-	g.Meta `path:"/upload" tags:"upload" method:"post" summary:"You first upload api"`
+	g.Meta `path:"/upload" tags:"upload" method:"post" summary:"You first /view/upload api"`
 }
 type UploadRes struct {
 	g.Meta `mime:"text/html" type:"string" example:"<html/>"`
 }
 
 type DeleteReq struct {
-	g.Meta `path:"/delete" tags:"delete" method:"get" summary:"You first delete api"`
+	g.Meta `path:"/delete" tags:"delete" method:"get" summary:"You first /view/delete api"`
 	Url    string `json:"url" dc:"文件url地址"`
 }
 type DeleteRes struct {
@@ -29,7 +29,7 @@ type DeleteRes struct {
 }
 
 type ImgReq struct {
-	g.Meta `path:"/img" tags:"img" method:"get" summary:"You first img api"`
+	g.Meta `path:"/img" tags:"img" method:"get" summary:"You first /view/img api"`
 	Url    string `json:"url" dc:"文件url地址"`
 }
 type ImgRes struct {
@@ -37,7 +37,7 @@ type ImgRes struct {
 }
 
 type OfficeReq struct {
-	g.Meta `path:"/office" tags:"office" method:"get" summary:"You first office api"`
+	g.Meta `path:"/office" tags:"office" method:"get" summary:"You first /view/office api"`
 	Url    string `json:"url" dc:"文件url地址"`
 }
 type OfficeRes struct {
@@ -45,7 +45,7 @@ type OfficeRes struct {
 }
 
 type PdfReq struct {
-	g.Meta `path:"/pdf" tags:"pdf" method:"get" summary:"You first pdf api"`
+	g.Meta `path:"/pdf" tags:"pdf" method:"get" summary:"You first /view/pdf api"`
 	Url    string `json:"url" dc:"文件url地址"`
 }
 type PdfRes struct {

@@ -2,18 +2,17 @@ package utils
 
 import (
 	"context"
+	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gfile"
-	"log"
 )
 
 // WaterMark pdf增加水印
-func WaterMark(ctx context.Context, pdfPath string, watermark string) string {
+func WaterMark(ctx context.Context, pdfPath string, watermark string) (string, error) {
 	if watermark == "" {
 		watermarkVar, err := g.Cfg().Get(ctx, "WaterMark.default", "liusuxian")
 		if err != nil {
-			log.Println("WaterMark 获取水印配置 Error: <", err.Error(), ">")
-			return ""
+			return "", err
 		}
 		watermark = watermarkVar.String()
 	}
@@ -21,15 +20,14 @@ func WaterMark(ctx context.Context, pdfPath string, watermark string) string {
 	fileName := watermark + "_" + gfile.Name(pdfPath) + ".pdf"
 	//cmdStr := "/usr/local/pdfcpu watermark add -mode text -- " + "\"" + watermark + "\"" + "  \"rot:45, mo:2, op:.3, color:.8 .8 .4\" " + "\"" + pdfPath + "\" " + "\"cache/pdf/" + fileName + "\""
 	cmdStr := "/usr/local/pdfcpu stamp add -mode text -- " + "\"" + watermark + "\"" + "  \"rot:45, mo:2, op:.3, color:.8 .8 .4\" " + "\"" + pdfPath + "\" " + "\"cache/pdf/" + fileName + "\""
-	if _, ok := Doexec(cmdStr); ok {
-		resultPath := "cache/pdf/" + fileName
-		if gfile.Exists(resultPath) {
-			return resultPath
-		} else {
-			log.Println("WaterMark resultPath NotExists: ", resultPath)
-			return ""
-		}
+	err := Doexec(cmdStr)
+	if err != nil {
+		return "", err
+	}
+	resultPath := "cache/pdf/" + fileName
+	if gfile.Exists(resultPath) {
+		return resultPath, nil
 	} else {
-		return ""
+		return "", gerror.Newf("WaterMark resultPath NotExists: %s", resultPath)
 	}
 }

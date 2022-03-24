@@ -9,16 +9,11 @@ import (
 )
 
 // Doexec 直接通过字符串执行shell命令，不拼接命令
-func Doexec(cmdStr string) (string, bool) {
+func Doexec(cmdStr string) error {
 	cmd := exec.Command("bash", "-c", cmdStr)
 	log.Println("Doexec cmd: ", cmd)
-	buf, err := cmd.CombinedOutput()
-	if err != nil {
-		log.Println("Doexec Error: <", err.Error(), "> when exec command read out buffer")
-		return "", false
-	} else {
-		return string(buf), true
-	}
+	_, err := cmd.CombinedOutput()
+	return err
 }
 
 func IsFileExist(filename string, filesize int64) bool {
@@ -34,15 +29,10 @@ func IsFileExist(filename string, filesize int64) bool {
 }
 
 // 执行shell命令
-func interactiveToexec(commandName string, params []string) (string, bool) {
+func interactiveToexec(commandName string, params []string) error {
 	cmd := exec.Command(commandName, params...)
-	buf, err := cmd.Output()
-	w := bytes.NewBuffer(nil)
-	cmd.Stderr = w
-	if err != nil {
-		log.Println("interactiveToexec Error: <", err.Error(), "> when exec command read out buffer")
-		return "", false
-	} else {
-		return string(buf), true
-	}
+	log.Println("interactiveToexec cmd: ", cmd)
+	_, err := cmd.Output()
+	cmd.Stderr = bytes.NewBuffer(nil)
+	return err
 }
