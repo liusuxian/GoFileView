@@ -3,7 +3,7 @@ module GoFileView
 go 1.18
 
 require (
-	github.com/gogf/gf/v2 v2.0.4
+	github.com/gogf/gf/v2 v2.0.6
 	github.com/microcosm-cc/bluemonday v1.0.18
 	github.com/russross/blackfriday v1.6.0
 	github.com/tealeg/xlsx v1.0.5
@@ -20,8 +20,9 @@ require (
 	github.com/go-redis/redis/v8 v8.11.4 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/gorilla/css v1.0.0 // indirect
-	github.com/gorilla/websocket v1.4.2 // indirect
+	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/grokify/html-strip-tags-go v0.0.1 // indirect
+	github.com/longbridgeapp/sqlparser v0.3.1 // indirect
 	github.com/mattn/go-colorable v0.1.9 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/mattn/go-runewidth v0.0.9 // indirect
