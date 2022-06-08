@@ -22,7 +22,7 @@ func ConvertToPDF(filePath string) (string, error) {
 		commandName = "cmd"
 		params = []string{"/c", "soffice", "--headless", "--invisible", "--convert-to", "pdf", "--outdir", "cache/pdf/", filePath}
 	case "linux":
-		commandName = "libreoffice"
+		commandName = "libreoffice7.3"
 		params = []string{"--invisible", "--headless", "--convert-to", "pdf", "--outdir", "cache/pdf/", filePath}
 	case "darwin":
 		commandName = "/Applications/LibreOffice.app/Contents/MacOS/soffice"

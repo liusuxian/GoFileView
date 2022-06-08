@@ -1,22 +1,23 @@
 FROM centos:7.9.2009
 MAINTAINER liusuxian "382185882@qq.com"
-COPY utility/external/fonts/* /usr/share/fonts/ChineseFonts/
+COPY utility/external/fonts/* /usr/share/fonts/
 
 ###############################################################################
 #                                INSTALLATION
 ###############################################################################
 # 设置固定的项目路径
 ENV WORKDIR /GoFileView
-ENV LANG en_US.UTF-8
-ENV LC_ALL en_US.UTF-8
+RUN yum install kde-l10n-Chinese -y
+RUN yum install glibc-common -y
+RUN localedef -c -f UTF-8 -i zh_CN zh_CN.utf8
+ENV LANG zh_CN.UTF-8
+ENV LC_ALL zh_CN.UTF-8
 ENV TZ=Asia/Shanghai
 
+RUN yum install wget -y
 RUN yum install vim -y
 RUN yum install java -y
 RUN yum install deltarpm -y &&\
-    yum install libreoffice -y &&\
-    yum install libreoffice-headless -y &&\
-    yum install libreoffice-writer -y &&\
     yum install ImageMagick -y &&\
     export DISPLAY=:0.0
 
@@ -43,9 +44,14 @@ RUN chmod +x /usr/local/emailconverter-2.5.3-all.jar
 COPY utility/external/lib/pdfcpu/linux/pdfcpu /usr/local/pdfcpu
 RUN chmod +x /usr/local/pdfcpu
 
+# 安装 libreoffice
+RUN wget https://mirrors.cloud.tencent.com/libreoffice/libreoffice/stable/7.3.3/rpm/x86_64/LibreOffice_7.3.3_Linux_x86-64_rpm.tar.gz
+RUN tar -zxvf LibreOffice_7.3.3_Linux_x86-64_rpm.tar.gz
+RUN rpm -Uivh LibreOffice_7.3.3.2_Linux_x86-64_rpm/RPMS/*.rpm --nodeps
+RUN rm -rf LibreOffice_7.3.3*
+
 # 安装wkhtmltopdf 用于将eml（html）文件转pdf
-RUN yum -y install wget &&\
-    wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox-0.12.5-1.centos7.x86_64.rpm &&\
+RUN wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox-0.12.5-1.centos7.x86_64.rpm &&\
     rpm --rebuilddb && yum install -y openssl && yum install -y xorg-x11-fonts-75dpi &&\
     rpm -ivh wkhtmltox-0.12.5-1.centos7.x86_64.rpm
 
