@@ -45,10 +45,10 @@ COPY utility/external/lib/pdfcpu/linux/pdfcpu /usr/local/pdfcpu
 RUN chmod +x /usr/local/pdfcpu
 
 # 安装 libreoffice
-RUN wget https://mirrors.cloud.tencent.com/libreoffice/libreoffice/stable/7.3.3/rpm/x86_64/LibreOffice_7.3.3_Linux_x86-64_rpm.tar.gz
-RUN tar -zxvf LibreOffice_7.3.3_Linux_x86-64_rpm.tar.gz
-RUN rpm -Uivh LibreOffice_7.3.3.2_Linux_x86-64_rpm/RPMS/*.rpm --nodeps
-RUN rm -rf LibreOffice_7.3.3*
+RUN wget https://mirrors.cloud.tencent.com/libreoffice/libreoffice/stable/7.3.4/rpm/x86_64/LibreOffice_7.3.4_Linux_x86-64_rpm.tar.gz
+RUN tar -zxvf LibreOffice_7.3.4_Linux_x86-64_rpm.tar.gz
+RUN rpm -Uivh LibreOffice_7.3.4.2_Linux_x86-64_rpm/RPMS/*.rpm --nodeps
+RUN rm -rf LibreOffice_7.3.4*
 
 # 安装wkhtmltopdf 用于将eml（html）文件转pdf
 RUN wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox-0.12.5-1.centos7.x86_64.rpm &&\
