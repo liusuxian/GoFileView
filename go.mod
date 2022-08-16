@@ -3,8 +3,8 @@ module GoFileView
 go 1.18
 
 require (
-	github.com/gogf/gf/v2 v2.1.1
-	github.com/microcosm-cc/bluemonday v1.0.18
+	github.com/gogf/gf/v2 v2.1.2
+	github.com/microcosm-cc/bluemonday v1.0.19
 	github.com/russross/blackfriday v1.6.0
 	github.com/tealeg/xlsx v1.0.5
 )
